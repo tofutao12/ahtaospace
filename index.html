@@ -18,29 +18,54 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Sarabun', sans-serif;
-            line-height: 1.9;
-            overflow-x: hidden;
-            letter-spacing: 0.3px;
+            background-color: var(--bg-color); color: var(--text-main);
+            font-family: 'Sarabun', sans-serif; line-height: 1.9;
+            overflow-x: hidden; letter-spacing: 0.3px;
+            transition: background-color 0.8s ease;
         }
 
         h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--accent); }
 
-        /* --- ปุ่มควบคุมเสียงและโหมดบรรยากาศ --- */
-        .controls-container {
-            position: fixed; top: 20px; right: 20px;
-            display: flex; gap: 10px; z-index: 999;
+        /* --- เมนูรวมปุ่มบรรยากาศ (Dropdown) --- */
+        .mood-dropdown {
+            position: fixed; top: 20px; right: 20px; z-index: 999;
         }
         .glass-btn {
-            background: rgba(15, 15, 15, 0.6); border: 1px solid var(--border-color);
-            color: #ccc; padding: 8px 14px; border-radius: 20px;
-            font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
-            backdrop-filter: blur(6px); transition: all 0.3s ease;
-            font-family: 'Sarabun', sans-serif;
+            background: rgba(15, 15, 15, 0.4); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ccc; padding: 10px 18px; border-radius: 30px;
+            font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(10px); transition: all 0.3s ease;
+            font-family: 'Sarabun', sans-serif; letter-spacing: 1px;
         }
-        .glass-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .glass-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+        .mood-menu {
+            display: none; /* ซ่อนไว้ก่อน */
+            position: absolute; top: 120%; right: 0;
+            background: rgba(15, 15, 15, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; padding: 8px; backdrop-filter: blur(15px);
+            width: max-content; min-width: 160px;
+            flex-direction: column; gap: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transform-origin: top right;
+        }
+        .mood-menu.show { display: flex; animation: fadeInDown 0.3s ease forwards; }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .menu-item {
+            background: transparent; border: none; color: #aaa; padding: 12px 16px;
+            text-align: left; font-family: 'Sarabun', sans-serif; font-size: 0.9rem;
+            cursor: pointer; border-radius: 8px; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .menu-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .menu-item.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
+        
+        .menu-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 6px 0; }
 
         /* --- แบนเนอร์ฉากหลัง --- */
         .hero-section {
@@ -50,32 +75,32 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* ปรับโทนสีให้เป็นเทาหม่น ไม่มืดเกิน ไม่สว่างไป */
         .bg-video, .bg-image {
             position: absolute; top: 50%; left: 50%;
             min-width: 100%; min-height: 100%;
             transform: translateX(-50%) translateY(-50%);
-            z-index: -2; opacity: 0.75;
-            filter: grayscale(85%) contrast(100%) brightness(80%);
-            object-fit: cover;
+            z-index: -2; opacity: 0.8;
+            filter: grayscale(80%) contrast(105%) brightness(85%);
+            object-fit: cover; transition: all 0.8s ease;
         }
 
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 10, 0.35); /* ลดความดำทับลงให้ภาพชัดขึ้น */
-            z-index: -1; transition: background 0.5s ease;
+            background: rgba(15, 15, 15, 0.35); z-index: -1; transition: background 0.8s ease;
         }
 
-        /* โหมดดาร์กพิเศษ (Midnight) */
-        body.midnight-mode .overlay { background: rgba(0, 0, 0, 0.85); }
-        body.midnight-mode .bg-video, body.midnight-mode .bg-image { filter: grayscale(100%) brightness(40%); }
+        /* โหมดต่างๆ */
+        body.theme-midnight .overlay { background: rgba(0, 5, 15, 0.75); }
+        body.theme-midnight .bg-video { filter: grayscale(90%) contrast(120%) brightness(50%); }
+        body.theme-warm .overlay { background: rgba(30, 15, 0, 0.5); }
+        body.theme-warm .bg-video { filter: sepia(40%) contrast(110%) brightness(75%); }
 
         .hero-content { z-index: 1; padding: 20px; }
         
         .hero-content h1 {
             font-family: 'Cinzel', serif; font-size: clamp(3rem, 7vw, 5rem);
             letter-spacing: 6px; margin-bottom: 15px; text-transform: uppercase;
-            color: #ffffff; text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            color: #ffffff; text-shadow: 0 4px 15px rgba(0,0,0,0.7);
             cursor: pointer; user-select: none; transition: opacity 0.2s;
         }
         .hero-content h1:active { opacity: 0.5; }
@@ -92,7 +117,7 @@
         }
         @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* --- ส่วนแสดงโพสต์ด้านล่าง --- */
+        /* --- ส่วนแสดงโพสต์ --- */
         .content-section { max-width: 700px; margin: 0 auto; padding: 60px 16px; }
 
         .entry-card {
@@ -111,8 +136,7 @@
 
         .post-image {
             width: 100%; border-radius: 4px; margin-bottom: 20px;
-            object-fit: cover; border: 1px solid var(--border-color);
-            max-height: 450px;
+            object-fit: cover; border: 1px solid var(--border-color); max-height: 450px;
         }
 
         .poem {
@@ -133,11 +157,10 @@
 
         .delete-btn {
             position: absolute; top: 15px; right: 15px; background: none; border: none;
-            color: #555; font-size: 0.8rem; cursor: pointer; transition: color 0.2s; z-index: 10;
+            color: #444; font-size: 0.8rem; cursor: pointer; transition: color 0.2s; z-index: 10;
         }
         .delete-btn:hover { color: #ff6b6b; }
 
-        /* ลูกเล่นเบลอข้อความ (Spoiler) */
         .blur-content {
             filter: blur(8px); opacity: 0.6; transition: filter 0.4s ease, opacity 0.4s ease;
             cursor: pointer; user-select: none; position: relative;
@@ -157,84 +180,86 @@
             display: none; justify-content: center; align-items: center;
             z-index: 9999; padding: 15px;
         }
-
         .modal-content {
             background: #0a0a0a; border: 1px solid var(--border-color);
             padding: 30px 20px; width: 100%; max-width: 650px;
             max-height: 90vh; overflow-y: auto; border-radius: 6px;
         }
         @media(min-width: 768px) { .modal-content { padding: 40px; } }
-
         .modal-content h2 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; }
         .section-desc { font-size: 0.85rem; color: #777; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
-
         .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
-
         label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 1px; margin-top: 15px;}
         input, textarea, select {
             width: 100%; padding: 12px; background: #121212; border: 1px solid var(--border-color);
             color: #fff; border-radius: 4px; margin-bottom: 5px; font-family: 'Sarabun', sans-serif; font-size: 0.95rem; outline: none;
         }
         input:focus, textarea:focus, select:focus { border-color: #555; }
-        
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 15px 0 25px 0; cursor: pointer; }
         .checkbox-group input { width: auto; margin: 0; transform: scale(1.2); cursor: pointer; }
         .checkbox-group label { margin: 0; cursor: pointer; color: #ccc; text-transform: none; font-size: 0.9rem; }
-
         button.submit-btn {
             background: #fff; color: #000; border: none; padding: 14px 25px; border-radius: 4px;
             font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.85rem;
             letter-spacing: 2px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px;
         }
         button.submit-btn:hover { background: #d0d0d0; }
-
         footer { text-align: center; padding: 50px 20px; color: #555; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; }
     </style>
 </head>
-<body>
+<body class="theme-rain">
 
-    <!-- ปุ่มควบคุมมุมขวาบน (เสียงฝน+เปียโน และ โหมดมืด) -->
-    <div class="controls-container">
-        <button class="glass-btn" id="themeBtn" onclick="toggleTheme()">🌗 ลดแสง</button>
-        <button class="glass-btn" id="soundBtn" onclick="toggleSound()">🔇 เสียงบรรยากาศ</button>
+    <!-- ปุ่มรวมบรรยากาศ (Dropdown) -->
+    <div class="mood-dropdown">
+        <button class="glass-btn" onclick="toggleMoodMenu()">
+            🎧 ปรับบรรยากาศ
+        </button>
+        <!-- ซ่อนอยู่ในปุ่ม พอกดจะเด้งลงมา -->
+        <div class="mood-menu" id="moodMenu">
+            <button class="menu-item active" id="btn-rain" onclick="setMode('rain')">
+                <span>🌧️ ฤดูฝน</span>
+            </button>
+            <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')">
+                <span>🌒 ราตรีสงัด</span>
+            </button>
+            <button class="menu-item" id="btn-warm" onclick="setMode('warm')">
+                <span>🕯️ แสงเทียน</span>
+            </button>
+            <div class="menu-divider"></div>
+            <button class="menu-item" id="soundBtn" onclick="toggleSound()">
+                <span>🔇 ปิดเสียงดนตรี</span>
+            </button>
+        </div>
     </div>
 
-    <!-- ไฟล์เสียง 2 เลเยอร์ (เสียงฝนช้าๆ + เสียงเปียโนคลอเบาๆ) -->
-    <audio id="rainAudio" loop preload="auto">
-        <!-- ลิงก์เสียงฝนตกเบาๆ -->
-        <source src="https://actions.google.com/sounds/v1/weather/rain_on_roof.ogg" type="audio/ogg">
-    </audio>
-    <audio id="pianoAudio" loop preload="auto">
-        <!-- ลิงก์เสียงเปียโนบรรเลงช้าๆ -->
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-sad-piano-loop-565.mp3" type="audio/mpeg">
-    </audio>
+    <!-- แทร็กเสียง -->
+    <audio id="sfxAudio" loop preload="auto"></audio>
+    <audio id="musicAudio" loop preload="auto"></audio>
 
     <!-- แบนเนอร์หลัก -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
-        <video autoplay loop muted playsinline class="bg-video">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-water-of-a-lake-1562-large.mp4" type="video/mp4">
-        </video>
+        <div id="heroBgContainer"></div>
         <div class="hero-content">
-            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิก 3 ครั้งเพื่อเปิดตั้งค่า">AHTAO SPACE</h1>
+            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิก 3 ครั้งเพื่อจัดการสเปซ">AHTAO SPACE</h1>
             <p id="brandSub">แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น</p>
         </div>
         <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
-    <!-- รายการโพสต์ -->
+    <!-- โพสต์ -->
     <main class="content-section" id="postsContainer">
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดความรู้สึก...</p>
     </main>
 
-    <!-- หน้าต่างหลังบ้าน -->
+    <!-- หลังบ้าน -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeAdmin()">✕</button>
             
             <div style="margin-bottom: 40px;">
                 <h2>1. แบนเนอร์ (ฉากหลัง)</h2>
-                <div class="section-desc">รองรับวิดีโอ (.mp4), GIF (ลิงก์ตรง), หรือรูปจาก Google Drive</div>
+                <div class="section-desc">รองรับวิดีโอ (.mp4), GIF, หรือรูปจาก Google Drive</div>
                 
                 <label>ประเภทสื่อ</label>
                 <select id="bannerType">
@@ -278,12 +303,11 @@
                 <input type="text" id="postMediaUrl" placeholder="https://open.spotify.com/embed/track/...">
 
                 <label>ป้ายกำกับ (อารมณ์ / แท็ก)</label>
-                <input type="text" id="postTags" placeholder="เช่น #คิดถึง, #ฝนตก, #ความเงียบ">
+                <input type="text" id="postTags" placeholder="เช่น #คิดถึง, #ฝนตก">
 
-                <!-- ลูกเล่นซ่อนข้อความ -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="postBlur">
-                    <label for="postBlur">ซ่อนความรู้สึกนี้ (ทำให้เบลอ ต้องเอาเมาส์แตะถึงจะเห็น)</label>
+                    <label for="postBlur">ซ่อนความรู้สึกนี้ (ทำให้เบลอ)</label>
                 </div>
 
                 <button class="submit-btn" onclick="createPost()">บันทึกความรู้สึก</button>
@@ -311,49 +335,108 @@
 
         let currentBannerData = { type: 'video', url: '', title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น' };
 
-        // ระบบเสียง (ฝนช้าๆ + เปียโนคลอ)
-        let isPlayingSound = false;
-        window.toggleSound = function() {
-            const rain = document.getElementById("rainAudio");
-            const piano = document.getElementById("pianoAudio");
-            const btn = document.getElementById("soundBtn");
-            
-            // หรี่เสียงฝนลงให้เบาๆ ฟังสบาย
-            rain.volume = 0.4; 
-            piano.volume = 0.5;
-
-            if (isPlayingSound) {
-                rain.pause(); piano.pause();
-                btn.innerHTML = "🔇 เสียงบรรยากาศ";
-                isPlayingSound = false;
-            } else {
-                rain.play().catch(e=>{}); piano.play().catch(e=>{});
-                btn.innerHTML = "🔊 ฟังอยู่";
-                isPlayingSound = true;
-            }
-        }
-
-        // โหมดลดแสง (Midnight Mode)
-        window.toggleTheme = function() {
-            const body = document.body;
-            body.classList.toggle("midnight-mode");
-            const btn = document.getElementById("themeBtn");
-            if(body.classList.contains("midnight-mode")){
-                btn.innerHTML = "🌒 โหมดมืดสนิท";
-            } else {
-                btn.innerHTML = "🌗 โหมดปกติ";
-            }
-        }
-
         function convertDriveLink(url) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
                 let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                    return `https://lh3.googleusercontent.com/d/${match[1]}`;
-                }
+                if (match && match[1]) { return `https://lh3.googleusercontent.com/d/${match[1]}`; }
             }
             return url;
+        }
+
+        // เปิด-ปิด เมนู Dropdown
+        window.toggleMoodMenu = function() {
+            document.getElementById("moodMenu").classList.toggle("show");
+        }
+        
+        // ถ้าคลิกที่อื่นในหน้าเว็บ ให้ซ่อนเมนู Dropdown อัตโนมัติ
+        window.onclick = function(event) {
+            if (!event.target.closest('.mood-dropdown')) {
+                const dropdowns = document.getElementsByClassName("mood-menu");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    if (dropdowns[i].classList.contains('show')) {
+                        dropdowns[i].classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // --- ระบบโหมดอารมณ์ ---
+        let isAudioPlaying = false;
+        
+        const moods = {
+            rain: {
+                sfx: "https://actions.google.com/sounds/v1/weather/rain_on_roof.ogg",
+                music: "https://assets.mixkit.co/sfx/preview/mixkit-sad-piano-loop-565.mp3"
+            },
+            midnight: {
+                type: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4",
+                sfx: "https://actions.google.com/sounds/v1/environment/crickets_at_night.ogg",
+                music: "https://assets.mixkit.co/sfx/preview/mixkit-mystique-163.mp3"
+            },
+            warm: {
+                type: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-fire-flames-burning-in-a-fireplace-1647-large.mp4",
+                sfx: "https://actions.google.com/sounds/v1/environment/fireplace.ogg",
+                music: "https://assets.mixkit.co/sfx/preview/mixkit-lofi-chill-track-572.mp3"
+            }
+        };
+
+        function renderBg(type, url) {
+            const container = document.getElementById("heroBgContainer");
+            if (!url) return;
+            if (type === "image") {
+                container.innerHTML = `<img src="${url}" class="bg-image" alt="Banner">`;
+            } else {
+                container.innerHTML = `<video autoplay loop muted playsinline class="bg-video"><source src="${url}" type="video/mp4"></video>`;
+            }
+        }
+
+        window.setMode = function(mode) {
+            // ไฮไลต์เมนูที่เลือก
+            document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+            
+            // ปิด Dropdown หลังเลือกเสร็จ (เพื่อให้หน้าจอคลีน)
+            document.getElementById("moodMenu").classList.remove("show");
+            
+            document.body.className = `theme-${mode}`;
+
+            if (mode === 'rain') {
+                let finalUrl = currentBannerData.type === "image" ? convertDriveLink(currentBannerData.url) : currentBannerData.url;
+                renderBg(currentBannerData.type, finalUrl);
+            } else {
+                renderBg(moods[mode].type, moods[mode].url);
+            }
+
+            const sfx = document.getElementById("sfxAudio");
+            const music = document.getElementById("musicAudio");
+            sfx.src = moods[mode].sfx;
+            music.src = moods[mode].music;
+            
+            sfx.volume = mode === 'rain' ? 0.3 : 0.5; 
+            music.volume = 0.5;
+
+            if (isAudioPlaying) {
+                sfx.play().catch(e=>{});
+                music.play().catch(e=>{});
+            }
+        }
+
+        window.toggleSound = function() {
+            const sfx = document.getElementById("sfxAudio");
+            const music = document.getElementById("musicAudio");
+            const btn = document.getElementById("soundBtn");
+            
+            if (isAudioPlaying) {
+                sfx.pause(); music.pause();
+                btn.innerHTML = "<span>🔊 เปิดเสียงดนตรี</span>";
+                isAudioPlaying = false;
+            } else {
+                if(!sfx.src) { setMode('rain'); }
+                sfx.play().catch(e=>{}); music.play().catch(e=>{});
+                btn.innerHTML = "<span>🔇 ปิดเสียงดนตรี</span>";
+                isAudioPlaying = true;
+            }
         }
 
         let clickCount = 0; let clickTimer = null;
@@ -378,26 +461,16 @@
                 const docSnap = await getDoc(doc(db, "settings", "banner"));
                 if (docSnap.exists()) {
                     currentBannerData = docSnap.data();
-                    const hero = document.getElementById("heroBanner");
-                    let finalUrl = currentBannerData.type === "image" ? convertDriveLink(currentBannerData.url) : currentBannerData.url;
+                    document.getElementById("brandTitle").innerText = currentBannerData.title || 'AHTAO SPACE';
+                    document.getElementById("brandSub").innerText = currentBannerData.subtitle || '';
                     
-                    if (finalUrl) {
-                        let mediaHtml = currentBannerData.type === "image" 
-                            ? `<img src="${finalUrl}" class="bg-image" alt="Banner">`
-                            : `<video autoplay loop muted playsinline class="bg-video"><source src="${finalUrl}" type="video/mp4"></video>`;
-
-                        hero.innerHTML = `
-                            <div class="overlay"></div>
-                            ${mediaHtml}
-                            <div class="hero-content">
-                                <h1 id="brandTitle" onclick="handleTitleClick()">${currentBannerData.title || 'AHTAO SPACE'}</h1>
-                                <p>${currentBannerData.subtitle || ''}</p>
-                            </div>
-                            <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
-                        `;
-                    }
+                    let finalUrl = currentBannerData.type === "image" ? convertDriveLink(currentBannerData.url) : currentBannerData.url;
+                    renderBg(currentBannerData.type, finalUrl);
                 }
             } catch (e) { console.log("ใช้ค่าเริ่มต้น"); }
+            
+            document.getElementById("sfxAudio").src = moods.rain.sfx;
+            document.getElementById("musicAudio").src = moods.rain.music;
         }
 
         async function loadPosts() {
@@ -409,12 +482,8 @@
                     return;
                 }
                 
-                // โหลดและเรียงโพสต์จากใหม่ไปเก่า
                 let postsArray = [];
-                querySnapshot.forEach((docSnap) => {
-                    postsArray.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                // เรียงวันที่ (ถ้ามีระบบ timestamp จะแม่นยำกว่า แต่เรียงย้อนกลับเพื่อให้โพสต์ใหม่ขึ้นก่อน)
+                querySnapshot.forEach((docSnap) => { postsArray.push({ id: docSnap.id, ...docSnap.data() }); });
                 postsArray.reverse();
 
                 container.innerHTML = "";
@@ -441,7 +510,6 @@
                         tagsHtml = `<div class="post-tags">${tagsList.map(tag => `<span class="post-tag">${tag}</span>`).join('')}</div>`;
                     }
 
-                    // ห่อหุ้มด้วยระบบ Blur ถ้าระบุว่าซ่อน
                     let contentWrapper = post.isBlurred 
                         ? `<div class="blur-content"><div class="blur-hint">แตะเพื่อดูความรู้สึก</div>${imgHtml}${textHtml}${tagsHtml}</div>` 
                         : `${imgHtml}${textHtml}${tagsHtml}`;
@@ -454,9 +522,7 @@
                         </article>
                     `;
                 });
-            } catch (e) {
-                container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">ไม่สามารถโหลดข้อมูลได้...</p>`;
-            }
+            } catch (e) { container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">ไม่สามารถโหลดข้อมูลได้...</p>`; }
         }
 
         window.saveBanner = async function() {
