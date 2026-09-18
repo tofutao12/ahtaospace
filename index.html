@@ -203,12 +203,11 @@
             <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')"><span>🌒 ราตรีสงัด</span></button>
             <button class="menu-item" id="btn-warm" onclick="setMode('warm')"><span>🕯️ แสงเทียน</span></button>
             <div class="menu-divider"></div>
-            <button class="menu-item" id="soundBtn" onclick="toggleSound()"><span>🔇 เปิดเสียงดนตรี</span></button>
+            <button class="menu-item" id="soundBtn" onclick="toggleSound()"><span>🔇 เปิดเพลงคลอ</span></button>
         </div>
     </div>
 
-    <!-- แทร็กเสียง -->
-    <audio id="sfxAudio" loop preload="auto"></audio>
+    <!-- แทร็กเสียงเพลงอย่างเดียว -->
     <audio id="musicAudio" loop preload="auto"></audio>
 
     <!-- แบนเนอร์หลัก -->
@@ -242,7 +241,6 @@
                         <option value="warm">🕯️ โหมดแสงเทียน (Warmth)</option>
                     </select>
                 </div>
-                <div class="section-desc">แนะนำให้อัปโหลดวิดีโอและไฟล์เสียง .mp3 ลง Google Drive เพื่อแก้ปัญหาเสียงไม่ดัง</div>
                 
                 <label>ประเภทภาพฉากหลัง</label>
                 <select id="bannerType">
@@ -261,10 +259,7 @@
 
                 <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
 
-                <label>ลิงก์เสียงบรรยากาศ (แนะนําลิงก์จาก Google Drive)</label>
-                <input type="text" id="sfxUrl" placeholder="ลิงก์ไฟล์ .mp3 หรือ .ogg">
-
-                <label>ลิงก์เสียงดนตรีคลอ (แนะนําลิงก์จาก Google Drive)</label>
+                <label>ลิงก์เพลงคลอ (Music) (แนะนําลิงก์จาก Google Drive)</label>
                 <input type="text" id="musicUrl" placeholder="ลิงก์ไฟล์ดนตรี .mp3">
 
                 <button class="submit-btn" onclick="saveThemeData()">บันทึกโหมดนี้</button>
@@ -324,14 +319,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ให้ค่าว่างไว้รอการโหลดจากฐานข้อมูล 
+        // ฝังเพลงของคุณอาเต๋าเข้าไปเลยเป็นค่าเริ่มต้น
+        const myPianoSong = "https://drive.google.com/file/d/1Bk46Ko5f43Wub1zOg9B3upaURXodWoWU/view?usp=sharing";
+
         let themesData = {
-            rain: { title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น', type: 'image', url: '', sfx: '', music: '' },
-            midnight: { title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี', type: 'image', url: '', sfx: '', music: '' },
-            warm: { title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ', type: 'image', url: '', sfx: '', music: '' }
+            rain: { title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น', type: 'image', url: '', music: myPianoSong },
+            midnight: { title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี', type: 'image', url: '', music: myPianoSong },
+            warm: { title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ', type: 'image', url: '', music: myPianoSong }
         };
 
-        let currentMode = localStorage.getItem('ahtao_saved_mode') || 'rain'; // โหลดโหมดที่จำไว้ หรือใช้ rain
+        // ระบบจำโหมดล่าสุด
+        let currentMode = localStorage.getItem('ahtao_saved_mode') || 'rain'; 
         let isAudioPlaying = false;
 
         function convertDriveLink(url, isMedia = false) {
@@ -356,14 +354,36 @@
 
         async function fetchAllThemes() {
             try {
+                // ดึงข้อมูลมา แต่ถ้าเพลงว่างเปล่า ให้ใช้เพลง myPianoSong แทน ป้องกันเพลงหาย
                 const snapRain = await getDoc(doc(db, "settings", "theme_rain"));
-                if(snapRain.exists()) Object.assign(themesData.rain, snapRain.data());
+                if(snapRain.exists()) {
+                    let d = snapRain.data();
+                    if(d.title) themesData.rain.title = d.title;
+                    if(d.subtitle) themesData.rain.subtitle = d.subtitle;
+                    if(d.type) themesData.rain.type = d.type;
+                    if(d.url) themesData.rain.url = d.url;
+                    if(d.music && d.music.trim() !== '') themesData.rain.music = d.music;
+                }
                 
                 const snapMid = await getDoc(doc(db, "settings", "theme_midnight"));
-                if(snapMid.exists()) Object.assign(themesData.midnight, snapMid.data());
+                if(snapMid.exists()) {
+                    let d = snapMid.data();
+                    if(d.title) themesData.midnight.title = d.title;
+                    if(d.subtitle) themesData.midnight.subtitle = d.subtitle;
+                    if(d.type) themesData.midnight.type = d.type;
+                    if(d.url) themesData.midnight.url = d.url;
+                    if(d.music && d.music.trim() !== '') themesData.midnight.music = d.music;
+                }
                 
                 const snapWarm = await getDoc(doc(db, "settings", "theme_warm"));
-                if(snapWarm.exists()) Object.assign(themesData.warm, snapWarm.data());
+                if(snapWarm.exists()) {
+                    let d = snapWarm.data();
+                    if(d.title) themesData.warm.title = d.title;
+                    if(d.subtitle) themesData.warm.subtitle = d.subtitle;
+                    if(d.type) themesData.warm.type = d.type;
+                    if(d.url) themesData.warm.url = d.url;
+                    if(d.music && d.music.trim() !== '') themesData.warm.music = d.music;
+                }
             } catch (e) { console.log("โหลดข้อมูลล้มเหลว"); }
             
             setMode(currentMode); 
@@ -381,7 +401,7 @@
 
         window.setMode = function(mode) {
             currentMode = mode;
-            localStorage.setItem('ahtao_saved_mode', mode); // บันทึกโหมดล่าสุด
+            localStorage.setItem('ahtao_saved_mode', mode); // บันทึกโหมดล่าสุดลงเบราว์เซอร์
 
             document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
             let activeBtn = document.getElementById('btn-' + mode);
@@ -397,37 +417,28 @@
             let finalBgUrl = data.type === "image" ? convertDriveLink(data.rawUrl || data.url) : (data.rawUrl || data.url);
             renderBg(data.type, finalBgUrl);
 
-            const sfx = document.getElementById("sfxAudio");
             const music = document.getElementById("musicAudio");
-            
-            let currentSfx = convertDriveLink(data.sfx, true);
             let currentMusic = convertDriveLink(data.music, true);
             
-            if(sfx.src !== currentSfx) sfx.src = currentSfx;
             if(music.src !== currentMusic) music.src = currentMusic;
-            
-            sfx.volume = mode === 'rain' ? 0.3 : 0.6; 
             music.volume = 0.6;
 
             if (isAudioPlaying) { 
-                if (sfx.src && sfx.src !== window.location.href) sfx.play().catch(e => console.log("SFX Play Error"));
                 if (music.src && music.src !== window.location.href) music.play().catch(e => console.log("Music Play Error"));
             }
         }
 
         window.toggleSound = function() {
-            const sfx = document.getElementById("sfxAudio");
             const music = document.getElementById("musicAudio");
             const btn = document.getElementById("soundBtn");
             
             if (isAudioPlaying) {
-                sfx.pause(); music.pause();
-                btn.innerHTML = "<span>🔊 เปิดเสียงดนตรี</span>";
+                music.pause();
+                btn.innerHTML = "<span>🔊 เปิดเพลงคลอ</span>";
                 isAudioPlaying = false;
             } else {
-                if (sfx.src && sfx.src !== window.location.href) sfx.play().catch(e => console.log("SFX Error"));
                 if (music.src && music.src !== window.location.href) music.play().catch(e => console.log("Music Error"));
-                btn.innerHTML = "<span>🔇 ปิดเสียงดนตรี</span>";
+                btn.innerHTML = "<span>🔇 ปิดเพลงคลอ</span>";
                 isAudioPlaying = true;
             }
         }
@@ -456,7 +467,6 @@
             document.getElementById("bannerUrl").value = data.rawUrl || data.url || '';
             document.getElementById("bannerTitleInput").value = data.title || '';
             document.getElementById("bannerSubInput").value = data.subtitle || '';
-            document.getElementById("sfxUrl").value = data.sfx || '';
             document.getElementById("musicUrl").value = data.music || '';
         }
 
@@ -466,13 +476,12 @@
             let rawUrl = document.getElementById("bannerUrl").value;
             const title = document.getElementById("bannerTitleInput").value;
             const subtitle = document.getElementById("bannerSubInput").value;
-            const sfx = document.getElementById("sfxUrl").value;
             const music = document.getElementById("musicUrl").value;
             
             let url = type === "image" ? convertDriveLink(rawUrl) : rawUrl;
 
             try {
-                await setDoc(doc(db, "settings", "theme_" + theme), { type, url, rawUrl, title, subtitle, sfx, music });
+                await setDoc(doc(db, "settings", "theme_" + theme), { type, url, rawUrl, title, subtitle, music });
                 alert("บันทึกบรรยากาศสำเร็จ!");
                 location.reload();
             } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
