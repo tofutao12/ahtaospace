@@ -7,12 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Prompt:wght@300;400&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #080808;
-            --surface-color: #0e0e0e;
-            --border-color: #2a2a2a;
-            --text-main: #e1e1e1;
-            --text-muted: #888888;
-            --accent: #ffffff;
+            --bg-color: #080808; --surface-color: #0e0e0e;
+            --border-color: #2a2a2a; --text-main: #e1e1e1;
+            --text-muted: #888888; --accent: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,9 +24,7 @@
         h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--accent); }
 
         /* --- เมนูรวมปุ่มบรรยากาศ (Dropdown) --- */
-        .mood-dropdown {
-            position: fixed; top: 20px; right: 20px; z-index: 999;
-        }
+        .mood-dropdown { position: fixed; top: 20px; right: 20px; z-index: 999; }
         .glass-btn {
             background: rgba(15, 15, 15, 0.4); border: 1px solid rgba(255, 255, 255, 0.15);
             color: #ccc; padding: 10px 18px; border-radius: 30px;
@@ -40,14 +35,12 @@
         .glass-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
 
         .mood-menu {
-            display: none; /* ซ่อนไว้ก่อน */
-            position: absolute; top: 120%; right: 0;
-            background: rgba(15, 15, 15, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none; position: absolute; top: 120%; right: 0;
+            background: rgba(15, 15, 15, 0.75); border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px; padding: 8px; backdrop-filter: blur(15px);
             width: max-content; min-width: 160px;
             flex-direction: column; gap: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            transform-origin: top right;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); transform-origin: top right;
         }
         .mood-menu.show { display: flex; animation: fadeInDown 0.3s ease forwards; }
 
@@ -64,7 +57,6 @@
         }
         .menu-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .menu-item.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
-        
         .menu-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 6px 0; }
 
         /* --- แบนเนอร์ฉากหลัง --- */
@@ -89,14 +81,12 @@
             background: rgba(15, 15, 15, 0.35); z-index: -1; transition: background 0.8s ease;
         }
 
-        /* โหมดต่างๆ */
         body.theme-midnight .overlay { background: rgba(0, 5, 15, 0.75); }
-        body.theme-midnight .bg-video { filter: grayscale(90%) contrast(120%) brightness(50%); }
+        body.theme-midnight .bg-video, body.theme-midnight .bg-image { filter: grayscale(90%) contrast(120%) brightness(50%); }
         body.theme-warm .overlay { background: rgba(30, 15, 0, 0.5); }
-        body.theme-warm .bg-video { filter: sepia(40%) contrast(110%) brightness(75%); }
+        body.theme-warm .bg-video, body.theme-warm .bg-image { filter: sepia(40%) contrast(110%) brightness(75%); }
 
         .hero-content { z-index: 1; padding: 20px; }
-        
         .hero-content h1 {
             font-family: 'Cinzel', serif; font-size: clamp(3rem, 7vw, 5rem);
             letter-spacing: 6px; margin-bottom: 15px; text-transform: uppercase;
@@ -104,7 +94,6 @@
             cursor: pointer; user-select: none; transition: opacity 0.2s;
         }
         .hero-content h1:active { opacity: 0.5; }
-
         .hero-content p {
             color: #e0e0e0; font-size: 1.1rem; letter-spacing: 1px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.8); margin-bottom: 40px; font-weight: 300;
@@ -119,42 +108,34 @@
 
         /* --- ส่วนแสดงโพสต์ --- */
         .content-section { max-width: 700px; margin: 0 auto; padding: 60px 16px; }
-
         .entry-card {
             background: var(--surface-color); border: 1px solid var(--border-color);
             padding: 30px 20px; margin-bottom: 40px; position: relative;
             transition: border-color 0.4s ease; border-radius: 4px;
         }
         @media(min-width: 768px) { .entry-card { padding: 50px 40px; margin-bottom: 60px; } }
-
         .date {
             font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 15px;
             letter-spacing: 3px; text-transform: uppercase; font-family: 'Cinzel', serif;
         }
-        
         .entry-card p { color: #d0d0d0; font-size: 1.05rem; margin-bottom: 15px; }
-
         .post-image {
             width: 100%; border-radius: 4px; margin-bottom: 20px;
             object-fit: cover; border: 1px solid var(--border-color); max-height: 450px;
         }
-
         .poem {
             font-family: 'Sarabun', serif; font-style: italic; color: #c4c4c4;
             padding: 20px 0; margin: 10px 0; line-height: 2.3; text-align: center;
             white-space: pre-line; font-size: 1.15rem;
         }
-
         .media-embed { margin-top: 20px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
         .media-embed iframe { width: 100%; border: none; display: block; }
-
         .post-tags { margin-top: 20px; }
         .post-tag {
             display: inline-block; background: #181818; color: #888;
             padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;
             margin-right: 8px; letter-spacing: 0.5px; border: 1px solid #222;
         }
-
         .delete-btn {
             position: absolute; top: 15px; right: 15px; background: none; border: none;
             color: #444; font-size: 0.8rem; cursor: pointer; transition: color 0.2s; z-index: 10;
@@ -195,6 +176,9 @@
             color: #fff; border-radius: 4px; margin-bottom: 5px; font-family: 'Sarabun', sans-serif; font-size: 0.95rem; outline: none;
         }
         input:focus, textarea:focus, select:focus { border-color: #555; }
+        
+        .theme-selector { background: #1a1a1a; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #333; }
+        
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 15px 0 25px 0; cursor: pointer; }
         .checkbox-group input { width: auto; margin: 0; transform: scale(1.2); cursor: pointer; }
         .checkbox-group label { margin: 0; cursor: pointer; color: #ccc; text-transform: none; font-size: 0.9rem; }
@@ -214,25 +198,16 @@
         <button class="glass-btn" onclick="toggleMoodMenu()">
             🎧 ปรับบรรยากาศ
         </button>
-        <!-- ซ่อนอยู่ในปุ่ม พอกดจะเด้งลงมา -->
         <div class="mood-menu" id="moodMenu">
-            <button class="menu-item active" id="btn-rain" onclick="setMode('rain')">
-                <span>🌧️ ฤดูฝน</span>
-            </button>
-            <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')">
-                <span>🌒 ราตรีสงัด</span>
-            </button>
-            <button class="menu-item" id="btn-warm" onclick="setMode('warm')">
-                <span>🕯️ แสงเทียน</span>
-            </button>
+            <button class="menu-item active" id="btn-rain" onclick="setMode('rain')"><span>🌧️ ฤดูฝน</span></button>
+            <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')"><span>🌒 ราตรีสงัด</span></button>
+            <button class="menu-item" id="btn-warm" onclick="setMode('warm')"><span>🕯️ แสงเทียน</span></button>
             <div class="menu-divider"></div>
-            <button class="menu-item" id="soundBtn" onclick="toggleSound()">
-                <span>🔇 ปิดเสียงดนตรี</span>
-            </button>
+            <button class="menu-item" id="soundBtn" onclick="toggleSound()"><span>🔇 ปิดเสียงดนตรี</span></button>
         </div>
     </div>
 
-    <!-- แทร็กเสียง -->
+    <!-- แทร็กเสียง 2 เลเยอร์ -->
     <audio id="sfxAudio" loop preload="auto"></audio>
     <audio id="musicAudio" loop preload="auto"></audio>
 
@@ -252,31 +227,49 @@
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดความรู้สึก...</p>
     </main>
 
-    <!-- หลังบ้าน -->
+    <!-- หลังบ้าน (อัปเกรดให้แก้ได้ทุกโหมด) -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeAdmin()">✕</button>
             
             <div style="margin-bottom: 40px;">
-                <h2>1. แบนเนอร์ (ฉากหลัง)</h2>
-                <div class="section-desc">รองรับวิดีโอ (.mp4), GIF, หรือรูปจาก Google Drive</div>
+                <h2>1. ตั้งค่าบรรยากาศแต่ละโหมด</h2>
                 
-                <label>ประเภทสื่อ</label>
+                <div class="theme-selector">
+                    <label style="color: #fff; margin-top: 0;">เลือกโหมดที่ต้องการแก้ไข:</label>
+                    <select id="adminThemeSelect" onchange="loadAdminThemeFields()">
+                        <option value="rain">🌧️ โหมดฤดูฝน (Rain)</option>
+                        <option value="midnight">🌒 โหมดราตรีสงัด (Midnight)</option>
+                        <option value="warm">🕯️ โหมดแสงเทียน (Warmth)</option>
+                    </select>
+                </div>
+
+                <div class="section-desc">คุณสามารถใส่ลิงก์ GIF หรือวิดีโอจาก Drive ได้เลย</div>
+                
+                <label>ประเภทภาพฉากหลัง</label>
                 <select id="bannerType">
-                    <option value="video">วิดีโอ (.mp4)</option>
                     <option value="image">รูปภาพ / GIF (รองรับลิงก์ Google Drive)</option>
+                    <option value="video">วิดีโอ (.mp4)</option>
                 </select>
 
-                <label>ลิงก์สื่อ</label>
-                <input type="text" id="bannerUrl" placeholder="วางลิงก์ที่นี่...">
+                <label>ลิงก์รูป/GIF หรือ วิดีโอ</label>
+                <input type="text" id="bannerUrl" placeholder="วางลิงก์ภาพหรือวิดีโอ...">
 
                 <label>ชื่อหลัก</label>
-                <input type="text" id="bannerTitleInput" value="AHTAO SPACE">
+                <input type="text" id="bannerTitleInput" placeholder="AHTAO SPACE">
 
                 <label>ข้อความรองใต้ชื่อ</label>
-                <input type="text" id="bannerSubInput" value="แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น">
+                <input type="text" id="bannerSubInput" placeholder="ประโยคความรู้สึก...">
 
-                <button class="submit-btn" onclick="saveBanner()">บันทึกแบนเนอร์</button>
+                <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
+
+                <label>ลิงก์เสียงบรรยากาศ (เสียงฝน, แมลง, ไฟ)</label>
+                <input type="text" id="sfxUrl" placeholder="ลิงก์ไฟล์ .mp3 หรือ .ogg">
+
+                <label>ลิงก์เสียงดนตรีคลอ (Music)</label>
+                <input type="text" id="musicUrl" placeholder="ลิงก์ไฟล์ดนตรี .mp3">
+
+                <button class="submit-btn" onclick="saveThemeData()">บันทึกโหมดนี้</button>
             </div>
 
             <div>
@@ -333,53 +326,66 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentBannerData = { type: 'video', url: '', title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น' };
+        // ค่า Default เริ่มต้นของแต่ละโหมด (เปลี่ยนเพลงให้เสถียร 100%)
+        let themesData = {
+            rain: {
+                type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-water-of-a-lake-1562-large.mp4',
+                title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น',
+                sfx: 'https://actions.google.com/sounds/v1/weather/rain_on_roof.ogg',
+                music: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3' // Sad Piano
+            },
+            midnight: {
+                type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4',
+                title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี',
+                sfx: 'https://actions.google.com/sounds/v1/environment/crickets_at_night.ogg',
+                music: 'https://cdn.pixabay.com/download/audio/2022/01/21/audio_31743c58bb.mp3' // Ambient Space
+            },
+            warm: {
+                type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-fire-flames-burning-in-a-fireplace-1647-large.mp4',
+                title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ',
+                sfx: 'https://actions.google.com/sounds/v1/environment/fireplace.ogg',
+                music: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3' // Lofi Chill
+            }
+        };
 
-        function convertDriveLink(url) {
+        let currentMode = 'rain';
+
+        // ตัวช่วยแปลงลิงก์ Drive (รองรับรูป และ เสียง .mp3)
+        function convertDriveLink(url, isMedia = false) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
                 let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) { return `https://lh3.googleusercontent.com/d/${match[1]}`; }
+                if (match && match[1]) { 
+                    if(!isMedia) return `https://lh3.googleusercontent.com/d/${match[1]}`; 
+                    else return `https://docs.google.com/uc?export=download&id=${match[1]}`; // สำหรับเพลง/วิดีโอ
+                }
             }
             return url;
         }
 
-        // เปิด-ปิด เมนู Dropdown
-        window.toggleMoodMenu = function() {
-            document.getElementById("moodMenu").classList.toggle("show");
-        }
-        
-        // ถ้าคลิกที่อื่นในหน้าเว็บ ให้ซ่อนเมนู Dropdown อัตโนมัติ
+        // จัดการ Dropdown
+        window.toggleMoodMenu = function() { document.getElementById("moodMenu").classList.toggle("show"); }
         window.onclick = function(event) {
             if (!event.target.closest('.mood-dropdown')) {
                 const dropdowns = document.getElementsByClassName("mood-menu");
-                for (let i = 0; i < dropdowns.length; i++) {
-                    if (dropdowns[i].classList.contains('show')) {
-                        dropdowns[i].classList.remove('show');
-                    }
-                }
+                for (let i = 0; i < dropdowns.length; i++) { dropdowns[i].classList.remove('show'); }
             }
         }
 
-        // --- ระบบโหมดอารมณ์ ---
-        let isAudioPlaying = false;
-        
-        const moods = {
-            rain: {
-                sfx: "https://actions.google.com/sounds/v1/weather/rain_on_roof.ogg",
-                music: "https://assets.mixkit.co/sfx/preview/mixkit-sad-piano-loop-565.mp3"
-            },
-            midnight: {
-                type: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4",
-                sfx: "https://actions.google.com/sounds/v1/environment/crickets_at_night.ogg",
-                music: "https://assets.mixkit.co/sfx/preview/mixkit-mystique-163.mp3"
-            },
-            warm: {
-                type: "video", url: "https://assets.mixkit.co/videos/preview/mixkit-fire-flames-burning-in-a-fireplace-1647-large.mp4",
-                sfx: "https://actions.google.com/sounds/v1/environment/fireplace.ogg",
-                music: "https://assets.mixkit.co/sfx/preview/mixkit-lofi-chill-track-572.mp3"
-            }
-        };
+        // โหลดข้อมูลทุกโหมดจาก Firebase
+        async function fetchAllThemes() {
+            try {
+                const snapRain = await getDoc(doc(db, "settings", "theme_rain"));
+                if(snapRain.exists()) themesData.rain = snapRain.data();
+                
+                const snapMid = await getDoc(doc(db, "settings", "theme_midnight"));
+                if(snapMid.exists()) themesData.midnight = snapMid.data();
+                
+                const snapWarm = await getDoc(doc(db, "settings", "theme_warm"));
+                if(snapWarm.exists()) themesData.warm = snapWarm.data();
+            } catch (e) { console.log("โหลดใช้ค่าเริ่มต้น"); }
+            setMode('rain'); // เปิดเว็บมาใช้โหมดฝนเป็นหลัก
+        }
 
         function renderBg(type, url) {
             const container = document.getElementById("heroBgContainer");
@@ -391,35 +397,32 @@
             }
         }
 
+        let isAudioPlaying = false;
+        
+        // ฟังก์ชันสลับบรรยากาศหน้าเว็บ
         window.setMode = function(mode) {
-            // ไฮไลต์เมนูที่เลือก
+            currentMode = mode;
             document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + mode).classList.add('active');
-            
-            // ปิด Dropdown หลังเลือกเสร็จ (เพื่อให้หน้าจอคลีน)
             document.getElementById("moodMenu").classList.remove("show");
-            
             document.body.className = `theme-${mode}`;
 
-            if (mode === 'rain') {
-                let finalUrl = currentBannerData.type === "image" ? convertDriveLink(currentBannerData.url) : currentBannerData.url;
-                renderBg(currentBannerData.type, finalUrl);
-            } else {
-                renderBg(moods[mode].type, moods[mode].url);
-            }
+            const data = themesData[mode];
+            document.getElementById("brandTitle").innerText = data.title || 'AHTAO SPACE';
+            document.getElementById("brandSub").innerText = data.subtitle || '';
+            
+            let finalBgUrl = data.type === "image" ? convertDriveLink(data.rawUrl || data.url) : (data.rawUrl || data.url);
+            renderBg(data.type, finalBgUrl);
 
             const sfx = document.getElementById("sfxAudio");
             const music = document.getElementById("musicAudio");
-            sfx.src = moods[mode].sfx;
-            music.src = moods[mode].music;
+            sfx.src = convertDriveLink(data.sfx, true);
+            music.src = convertDriveLink(data.music, true);
             
             sfx.volume = mode === 'rain' ? 0.3 : 0.5; 
             music.volume = 0.5;
 
-            if (isAudioPlaying) {
-                sfx.play().catch(e=>{});
-                music.play().catch(e=>{});
-            }
+            if (isAudioPlaying) { sfx.play().catch(e=>{}); music.play().catch(e=>{}); }
         }
 
         window.toggleSound = function() {
@@ -432,13 +435,14 @@
                 btn.innerHTML = "<span>🔊 เปิดเสียงดนตรี</span>";
                 isAudioPlaying = false;
             } else {
-                if(!sfx.src) { setMode('rain'); }
+                if(!sfx.src) { setMode(currentMode); }
                 sfx.play().catch(e=>{}); music.play().catch(e=>{});
                 btn.innerHTML = "<span>🔇 ปิดเสียงดนตรี</span>";
                 isAudioPlaying = true;
             }
         }
 
+        // --- ระบบหลังบ้าน ---
         let clickCount = 0; let clickTimer = null;
         window.handleTitleClick = function() {
             clickCount++;
@@ -446,33 +450,46 @@
                 clickTimer = setTimeout(() => { clickCount = 0; }, 500);
             } else if (clickCount === 3) {
                 clearTimeout(clickTimer); clickCount = 0;
-                document.getElementById("bannerType").value = currentBannerData.type || 'video';
-                document.getElementById("bannerUrl").value = currentBannerData.rawUrl || currentBannerData.url || '';
-                document.getElementById("bannerTitleInput").value = currentBannerData.title || 'AHTAO SPACE';
-                document.getElementById("bannerSubInput").value = currentBannerData.subtitle || 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น';
+                document.getElementById("adminThemeSelect").value = currentMode;
+                window.loadAdminThemeFields();
                 document.getElementById("adminModal").style.display = "flex";
             }
         }
 
         window.closeAdmin = function() { document.getElementById("adminModal").style.display = "none"; }
 
-        async function loadBanner() {
-            try {
-                const docSnap = await getDoc(doc(db, "settings", "banner"));
-                if (docSnap.exists()) {
-                    currentBannerData = docSnap.data();
-                    document.getElementById("brandTitle").innerText = currentBannerData.title || 'AHTAO SPACE';
-                    document.getElementById("brandSub").innerText = currentBannerData.subtitle || '';
-                    
-                    let finalUrl = currentBannerData.type === "image" ? convertDriveLink(currentBannerData.url) : currentBannerData.url;
-                    renderBg(currentBannerData.type, finalUrl);
-                }
-            } catch (e) { console.log("ใช้ค่าเริ่มต้น"); }
+        // เมื่อเลือกเปลี่ยนโหมดในหลังบ้าน ให้ดึงค่าของโหมดนั้นมาแสดงในช่องพิมพ์
+        window.loadAdminThemeFields = function() {
+            const selected = document.getElementById("adminThemeSelect").value;
+            const data = themesData[selected];
             
-            document.getElementById("sfxAudio").src = moods.rain.sfx;
-            document.getElementById("musicAudio").src = moods.rain.music;
+            document.getElementById("bannerType").value = data.type || 'image';
+            document.getElementById("bannerUrl").value = data.rawUrl || data.url || '';
+            document.getElementById("bannerTitleInput").value = data.title || '';
+            document.getElementById("bannerSubInput").value = data.subtitle || '';
+            document.getElementById("sfxUrl").value = data.sfx || '';
+            document.getElementById("musicUrl").value = data.music || '';
         }
 
+        window.saveThemeData = async function() {
+            const theme = document.getElementById("adminThemeSelect").value;
+            const type = document.getElementById("bannerType").value;
+            let rawUrl = document.getElementById("bannerUrl").value;
+            const title = document.getElementById("bannerTitleInput").value;
+            const subtitle = document.getElementById("bannerSubInput").value;
+            const sfx = document.getElementById("sfxUrl").value;
+            const music = document.getElementById("musicUrl").value;
+            
+            let url = type === "image" ? convertDriveLink(rawUrl) : rawUrl;
+
+            try {
+                await setDoc(doc(db, "settings", "theme_" + theme), { type, url, rawUrl, title, subtitle, sfx, music });
+                alert("บันทึกบรรยากาศสำเร็จ!");
+                location.reload();
+            } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+        }
+
+        // ระบบโพสต์
         async function loadPosts() {
             const container = document.getElementById("postsContainer");
             try {
@@ -503,7 +520,6 @@
                     }
 
                     let imgHtml = post.imageUrl ? `<img src="${convertDriveLink(post.imageUrl)}" class="post-image" alt="Memory">` : '';
-                    
                     let tagsHtml = "";
                     if (post.tags) {
                         const tagsList = post.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
@@ -523,18 +539,6 @@
                     `;
                 });
             } catch (e) { container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">ไม่สามารถโหลดข้อมูลได้...</p>`; }
-        }
-
-        window.saveBanner = async function() {
-            const type = document.getElementById("bannerType").value;
-            let rawUrl = document.getElementById("bannerUrl").value;
-            const title = document.getElementById("bannerTitleInput").value;
-            const subtitle = document.getElementById("bannerSubInput").value;
-            let url = type === "image" ? convertDriveLink(rawUrl) : rawUrl;
-            try {
-                await setDoc(doc(db, "settings", "banner"), { type, url, rawUrl, title, subtitle });
-                location.reload();
-            } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
         }
 
         window.createPost = async function() {
@@ -562,7 +566,7 @@
             }
         }
 
-        loadBanner();
+        fetchAllThemes();
         loadPosts();
     </script>
 </body>
