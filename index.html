@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อาเต๋า - Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #141414;
+            --text-main: #d0d0d0;
+            --text-heading: #ffffff;
+            --text-muted: #666666;
+            --border-color: #2a2a2a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.8;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--text-heading); }
+        
+        /* Hero Section (แบนเนอร์) */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .bg-video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: -2;
+            opacity: 0.4;
+            filter: grayscale(100%) contrast(120%);
+            object-fit: cover;
+        }
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,1) 100%);
+            z-index: -1;
+        }
+        .hero-content { z-index: 1; padding: 20px; }
+        .hero-content h1 { font-size: 3.5rem; letter-spacing: 4px; margin-bottom: 15px; }
+        .hero-content p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px; }
+        
+        .scroll-down {
+            display: inline-block; padding: 10px 20px; border: 1px solid #444;
+            color: #fff; text-decoration: none; border-radius: 20px; font-size: 0.85rem;
+            transition: 0.3s;
+        }
+        .scroll-down:hover { background: #fff; color: #000; }
+
+        /* Content Section */
+        .content-section { max-width: 700px; margin: 0 auto; padding: 80px 20px; }
+        .entry-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .date { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 15px; letter-spacing: 1px; }
+        .entry-card h2 { font-size: 1.4rem; margin-bottom: 20px; }
+        .poem {
+            font-style: italic; color: #b0b0b0; padding: 20px;
+            border-left: 2px solid #555; margin: 20px 0; white-space: pre-line;
+        }
+        .media-embed { margin-top: 20px; border-radius: 8px; overflow: hidden; }
+        .media-embed iframe { width: 100%; border: none; display: block; }
+
+        /* Admin Box ด้านล่างสุดของเว็บ */
+        .admin-section {
+            max-width: 700px; margin: 40px auto 100px auto; padding: 40px;
+            background: #111; border: 1px dashed #333; border-radius: 8px;
+        }
+        .admin-section h2 { font-size: 1.2rem; margin-bottom: 20px; color: #888; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        label { display: block; margin-bottom: 6px; color: #888; font-size: 0.85rem; }
+        input, textarea, select {
+            width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333;
+            color: #fff; border-radius: 4px; margin-bottom: 15px; font-family: 'Sarabun', sans-serif;
+        }
+        button {
+            background: #fff; color: #000; border: none; padding: 10px 20px;
+            border-radius: 4px; cursor: pointer; font-family: 'Prompt', sans-serif; font-weight: 500;
+        }
+        button:hover { background: #ddd; }
+        .admin-toggle { text-align: center; margin: 50px 0; }
+        .admin-toggle a { color: #555; text-decoration: none; font-size: 0.85rem; }
+        .admin-toggle a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- ส่วนแบนเนอร์ -->
+    <header class="hero-section" id="heroBanner">
+        <div class="overlay"></div>
+        <video autoplay loop muted playsinline class="bg-video">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-water-of-a-lake-1562-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1>อาเต๋า Space</h1>
+            <p>พื้นที่เก็บบันทึก ความรู้สึก และถ้อยคำ</p>
+            <a href="#postsContainer" class="scroll-down">↓ เลื่อนเพื่ออ่าน</a>
+        </div>
+    </header>
+
+    <!-- ส่วนเนื้อหาโพสต์ -->
+    <main class="content-section" id="postsContainer">
+        <p style="text-align: center; color: #666;">กำลังโหลดเรื่องราว...</p>
+    </main>
+
+    <!-- ส่วนหลังบ้าน (ซ่อนอยู่ด้านล่าง เลื่อนมาเจอ) -->
+    <div class="admin-toggle">
+        <a href="#adminPanel">⚙️ เปิดโหมดจัดการ (หลังบ้าน)</a>
+    </div>
+
+    <section class="admin-section" id="adminPanel">
+        <h2>⚙️ ระบบหลังบ้าน (โพสต์เนื้อหา / เปลี่ยนแบนเนอร์)</h2>
+        
+        <div style="margin-bottom: 30px;">
+            <label style="color:#aaa; font-weight:bold;">1. เปลี่ยนแบนเนอร์วิดีโอ</label>
+            <label>ลิงก์วิดีโอ (.mp4)</label>
+            <input type="text" id="bannerUrl" placeholder="https://.../video.mp4">
+            <label>หัวข้อใหญ่</label>
+            <input type="text" id="bannerTitle" value="อาเต๋า Space">
+            <label>ข้อความรอง</label>
+            <input type="text" id="bannerSub" value="พื้นที่เก็บบันทึก ความรู้สึก และถ้อยคำ">
+            <button onclick="saveBanner()">บันทึกแบนเนอร์</button>
+        </div>
+
+        <div>
+            <label style="color:#aaa; font-weight:bold;">2. เขียนโพสต์ใหม่</label>
+            <label>ประเภทโพสต์</label>
+            <select id="postType">
+                <option value="text">บันทึกความรู้สึกทั่วไป</option>
+                <option value="poem">บทกวี / คำคม</option>
+                <option value="music">เพลง (Spotify Embed)</option>
+            </select>
+            <label>วันที่</label>
+            <input type="text" id="postDate" placeholder="19 กันยายน 2026">
+            <label>หัวข้อเรื่อง</label>
+            <input type="text" id="postTitle" placeholder="ชื่อเรื่อง...">
+            <label>เนื้อหา / ข้อความ</label>
+            <textarea id="postContent" rows="4" placeholder="พิมพ์ข้อความ..."></textarea>
+            <label>ลิงก์เพลง Spotify (เฉพาะประเภทเพลง - โค้ด Embed)</label>
+            <input type="text" id="postMediaUrl" placeholder="https://open.spotify.com/embed/track/...">
+            <button onclick="createPost()">โพสต์ลงเว็บทันที</button>
+        </div>
+    </section>
+
+    <!-- Script ควบคุมระบบ Firebase ทั้งหมดในหน้าเดียว -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBUsVYDVPbAfEwlmOqvLel8lbUsclZVxHo",
+            authDomain: "ahtao-space.firebaseapp.com",
+            projectId: "ahtao-space",
+            storageBucket: "ahtao-space.firebasestorage.app",
+            messagingSenderId: "946377925833",
+            appId: "1:946377925833:web:6dbfb0110968d208695918"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // โหลดแบนเนอร์
+        async function loadBanner() {
+            try {
+                const docSnap = await getDoc(doc(db, "settings", "banner"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const hero = document.getElementById("heroBanner");
+                    if (data.url) {
+                        hero.innerHTML = `
+                            <div class="overlay"></div>
+                            <video autoplay loop muted playsinline class="bg-video"><source src="${data.url}" type="video/mp4"></video>
+                            <div class="hero-content">
+                                <h1>${data.title || 'อาเต๋า Space'}</h1>
+                                <p>${data.subtitle || ''}</p>
+                                <a href="#postsContainer" class="scroll-down">↓ เลื่อนเพื่ออ่าน</a>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (e) { console.log("ยังไม่มีแบนเนอร์"); }
+        }
+
+        // โหลดโพสต์
+        async function loadPosts() {
+            const container = document.getElementById("postsContainer");
+            try {
+                const querySnapshot = await getDocs(collection(db, "posts"));
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<p style="text-align: center; color: #666;">ยังไม่มีเรื่องราว ลองโพสต์ข้อความแรกของคุณจากกล่องด้านล่างดูสิครับ</p>`;
+                    return;
+                }
+                
+                container.innerHTML = "";
+                querySnapshot.forEach((docSnap) => {
+                    const post = docSnap.data();
+                    let contentHtml = "";
+
+                    if (post.type === 'text') {
+                        contentHtml = `<p>${post.content ? post.content.replace(/\n/g, '<br>') : ''}</p>`;
+                    } else if (post.type === 'poem') {
+                        contentHtml = `<div class="poem">${post.content || ''}</div>`;
+                    } else if (post.type === 'music') {
+                        contentHtml = `
+                            <p>${post.content || ''}</p>
+                            <div class="media-embed">
+                                <iframe style="border-radius:12px" src="${post.mediaUrl || ''}" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML += `
+                        <article class="entry-card">
+                            <span class="date">${post.date || ''}</span>
+                            ${post.title ? `<h2>${post.title}</h2>` : ''}
+                            ${contentHtml}
+                        </article>
+                    `;
+                });
+            } catch (e) {
+                container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">กำลังเชื่อมต่อฐานข้อมูล...</p>`;
+            }
+        }
+
+        // บันทึกแบนเนอร์ (ผูกกับ Window เพื่อให้ HTML เรียกได้)
+        window.saveBanner = async function() {
+            const url = document.getElementById("bannerUrl").value;
+            const title = document.getElementById("bannerTitle").value;
+            const subtitle = document.getElementById("bannerSub").value;
+            try {
+                await setDoc(doc(db, "settings", "banner"), { url, title, subtitle });
+                alert("✅ บันทึกแบนเนอร์สำเร็จ! กำลังรีเฟรชหน้าเว็บ...");
+                location.reload();
+            } catch (e) {
+                alert("❌ เกิดข้อผิดพลาด: " + e.message);
+            }
+        }
+
+        // สร้างโพสต์
+        window.createPost = async function() {
+            const type = document.getElementById("postType").value;
+            const date = document.getElementById("postDate").value;
+            const title = document.getElementById("postTitle").value;
+            const content = document.getElementById("postContent").value;
+            const mediaUrl = document.getElementById("postMediaUrl").value;
+
+            try {
+                await addDoc(collection(db, "posts"), {
+                    type, date, title, content, mediaUrl,
+                    createdAt: new Date()
+                });
+                alert("🎉 โพสต์สำเร็จ! กำลังรีเฟรชหน้าเว็บ...");
+                location.reload();
+            } catch (e) {
+                alert("❌ เกิดข้อผิดพลาด: " + e.message);
+            }
+        }
+
+        loadBanner();
+        loadPosts();
+    </script>
+</body>
+</html>
