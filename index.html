@@ -32,7 +32,7 @@
             color: var(--accent);
         }
 
-        /* --- ส่วนแบนเนอร์ (Hero Section) --- */
+        /* --- ส่วนแบนเนอร์ (รูป/วิดีโอจะอยู่ "ข้างหลังชื่อ" ตรงนี้) --- */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -50,21 +50,21 @@
             min-width: 100%; min-height: 100%;
             transform: translateX(-50%) translateY(-50%);
             z-index: -2;
-            opacity: 0.35;
-            filter: grayscale(100%) contrast(150%) brightness(80%);
+            opacity: 0.4;
+            filter: grayscale(100%) contrast(150%) brightness(70%);
             object-fit: cover;
         }
 
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(5,5,5,0.2) 0%, rgba(5,5,5,0.95) 100%);
+            background: rgba(5, 5, 5, 0.65); /* ความมืดทับหลังภาพเพื่อให้ตัวหนังสือเด่นขึ้น */
             z-index: -1;
         }
 
         .hero-content { z-index: 1; padding: 20px; }
         
-        /* จุดที่คลิก 3 ครั้งเพื่อเปิดหลังบ้าน */
+        /* จุดคลิก 3 ครั้งเพื่อเปิดหลังบ้าน */
         .hero-content h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(3rem, 6vw, 5rem);
@@ -72,7 +72,7 @@
             margin-bottom: 15px;
             text-transform: uppercase;
             color: #fff;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            text-shadow: 0 10px 30px rgba(0,0,0,0.9);
             cursor: pointer;
             user-select: none;
             transition: opacity 0.2s;
@@ -80,10 +80,10 @@
         .hero-content h1:active { opacity: 0.5; }
 
         .hero-content p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            color: #b0b0b0;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.8);
             margin-bottom: 40px;
         }
 
@@ -102,7 +102,7 @@
             0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; }
         }
 
-        /* --- ส่วนเนื้อหา --- */
+        /* --- ส่วนแสดงเนื้อหา (โพสต์จะเรียงลงมาตรงนี้) --- */
         .content-section {
             max-width: 750px; margin: 0 auto; padding: 100px 20px;
         }
@@ -131,10 +131,11 @@
             margin: 30px 0; line-height: 2.4; text-align: center; white-space: pre-line; font-size: 1.15rem;
         }
 
+        /* ส่วนแสดงเพลง Spotify จะเป็นการ์ดเครื่องเล่นเพลงแทรกตรงนี้ */
         .media-embed { margin-top: 30px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
         .media-embed iframe { width: 100%; border: none; display: block; }
 
-        /* --- หน้าต่างป๊อปอัพหลังบ้าน (ภาษาไทย) --- */
+        /* --- ป๊อปอัพหลังบ้าน --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
@@ -144,13 +145,18 @@
 
         .modal-content {
             background: #080808; border: 1px solid var(--border-color);
-            padding: 40px; width: 100%; max-width: 600px;
+            padding: 40px; width: 100%; max-width: 650px;
             max-height: 90vh; overflow-y: auto; position: relative;
         }
 
         .modal-content h2 {
-            font-size: 1.1rem; margin-bottom: 25px; letter-spacing: 2px;
-            text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;
+            font-size: 1.1rem; margin-bottom: 10px; letter-spacing: 1px;
+            text-transform: uppercase; color: #fff;
+        }
+        
+        .section-desc {
+            font-size: 0.85rem; color: #888; margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 10px;
         }
 
         .close-btn {
@@ -173,7 +179,7 @@
         }
         button.submit-btn:hover { background: #b8b8b8; }
 
-        .form-block { margin-bottom: 30px; }
+        .form-block { margin-bottom: 35px; }
 
         footer {
             text-align: center; padding: 60px 20px; color: var(--text-muted);
@@ -183,63 +189,78 @@
 </head>
 <body>
 
-    <!-- ส่วนแบนเนอร์ -->
+    <!-- แบนเนอร์ (รูป/วิดีโออยู่หลังชื่อตรงนี้) -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
         <video autoplay loop muted playsinline class="bg-video">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-water-of-a-lake-1562-large.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
-            <!-- คลิกที่คำว่า "อาเต๋า" 3 ครั้งติดกันเพื่อเปิดหลังบ้าน -->
-            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิก 3 ครั้งเพื่อจัดการระบบ">อาเต๋า</h1>
+            <!-- คลิกที่ชื่อ 3 ครั้งเพื่อเปิดหลังบ้าน -->
+            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิก 3 ครั้งเพื่อเปิดตั้งค่า">อาเต๋า</h1>
             <p id="brandSub">พื้นที่แห่งความรู้สึกและถ้อยคำ</p>
         </div>
         <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
-    <!-- ส่วนแสดงเนื้อหา -->
+    <!-- รายการโพสต์ทั้งหมดจะแสดงเรียงลงมาตรงนี้ -->
     <main class="content-section" id="postsContainer">
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดเรื่องราว...</p>
     </main>
 
-    <!-- ป๊อปอัพหลังบ้าน (ภาษาไทย) -->
+    <!-- หน้าต่างหลังบ้าน (ป๊อปอัพ) -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeAdmin()">✕</button>
             
+            <!-- ส่วนที่ 1: ตั้งค่าแบนเนอร์หลังชื่อ -->
             <div class="form-block">
-                <h2>ตั้งค่าแบนเนอร์ (วิดีโอหรือรูปภาพ)</h2>
+                <h2>1. ตั้งค่าแบนเนอร์ (ภาพหรือวิดีโอหลังชื่อหลัก)</h2>
+                <div class="section-desc">เปลี่ยนภาพพื้นหลังหรือวิดีโอที่อยู่ด้านหลังชื่อ "อาเต๋า" รวมถึงข้อความใต้ชื่อ</div>
+                
                 <label>ประเภทแบนเนอร์</label>
                 <select id="bannerType">
+                    <option value="image">รูปภาพ (รองรับลิงก์ Google Drive)</option>
                     <option value="video">วิดีโอ (.mp4)</option>
-                    <option value="image">รูปภาพ (.jpg / .png)</option>
                 </select>
-                <label>ลิงก์สื่อ (ใส่ลิงก์วิดีโอ หรือ ลิงก์รูปภาพ)</label>
-                <input type="text" id="bannerUrl" placeholder="https://...">
-                <label>ชื่อหัวข้อหลัก</label>
+
+                <label>ลิงก์รูปภาพ หรือ ลิงก์วิดีโอ</label>
+                <input type="text" id="bannerUrl" placeholder="วางลิงก์จาก Google Drive หรือลิงก์ตรงที่นี่...">
+
+                <label>ชื่อหลัก (หัวข้อใหญ่)</label>
                 <input type="text" id="bannerTitleInput" value="อาเต๋า">
-                <label>ข้อความรองด้านล่าง</label>
+
+                <label>ข้อความรอง (ใต้ชื่อ)</label>
                 <input type="text" id="bannerSubInput" value="พื้นที่แห่งความรู้สึกและถ้อยคำ">
-                <button class="submit-btn" onclick="saveBanner()">บันทึกแบนเนอร์</button>
+
+                <button class="submit-btn" onclick="saveBanner()">บันทึกแบนเนอร์ (จำค่านี้ไว้ตลอด)</button>
             </div>
 
+            <!-- ส่วนที่ 2: เขียนโพสต์ใหม่ -->
             <div class="form-block" style="margin-bottom: 0;">
-                <h2>เขียนเรื่องราว / โพสต์ใหม่</h2>
+                <h2>2. เขียนโพสต์ใหม่ (จะแสดงเรียงต่อกันด้านล่างเว็บ)</h2>
+                <div class="section-desc">เลือกประเภทสิ่งที่อยากโพสต์ เช่น ข้อความสั้นๆ บทกวี หรือแปะเพลงจาก Spotify</div>
+
                 <label>ประเภทโพสต์</label>
                 <select id="postType">
                     <option value="text">ข้อความทั่วไป / บันทึกสั้น</option>
-                    <option value="poem">บทกวี / คำคม</option>
-                    <option value="music">เพลง (Spotify Embed)</option>
+                    <option value="poem">บทกวี / คำคม (จัดกึ่งกลาง ตัวเอียง)</option>
+                    <option value="music">เพลง (แสดงเครื่องเล่นเพลง Spotify)</option>
                 </select>
+
                 <label>วันที่</label>
-                <input type="text" id="postDate" placeholder="19 กันยายน 2026">
+                <input type="text" id="postDate" placeholder="เช่น 19 กันยายน 2026">
+
                 <label>หัวข้อเรื่อง (ถ้ามี)</label>
                 <input type="text" id="postTitle" placeholder="ชื่อเรื่อง...">
+
                 <label>เนื้อหา / ประโยคสั้นๆ</label>
                 <textarea id="postContent" rows="3" placeholder="พิมพ์ข้อความของคุณที่นี่..."></textarea>
-                <label>ลิงก์ Spotify (เฉพาะกรณีเลือกประเภทเพลง)</label>
+
+                <label>ลิงก์เพลง Spotify (เฉพาะกรณีเลือกประเภทเพลง)</label>
                 <input type="text" id="postMediaUrl" placeholder="https://open.spotify.com/embed/track/...">
-                <button class="submit-btn" onclick="createPost()">โพสต์ลงเว็บไซต์</button>
+
+                <button class="submit-btn" onclick="createPost()">โพสต์ลงเว็บไซต์ทันที</button>
             </div>
         </div>
     </div>
@@ -248,7 +269,7 @@
         <p>&copy; Ahtao Space. All rights reserved.</p>
     </footer>
 
-    <!-- ระบบ JavaScript -->
+    <!-- ระบบแปลงลิงก์ Google Drive และจัดการฐานข้อมูล -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -265,19 +286,36 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ตัวจับคลิกที่คำว่า "อาเต๋า" 3 ครั้ง
+        let currentBannerData = { type: 'image', url: '', title: 'อาเต๋า', subtitle: 'พื้นที่แห่งความรู้สึกและถ้อยคำ' };
+
+        // แปลงลิงก์ Google Drive ให้เป็นลิงก์รูปภาพที่แสดงผลได้ทันที
+        function convertDriveLink(url) {
+            if (!url) return "";
+            if (url.includes("drive.google.com")) {
+                let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return `https://lh3.googleusercontent.com/d/${match[1]}`;
+                }
+            }
+            return url;
+        }
+
+        // ตัวจับคลิกชื่อ 3 ครั้ง
         let clickCount = 0;
         let clickTimer = null;
 
         window.handleTitleClick = function() {
             clickCount++;
             if (clickCount === 1) {
-                clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                }, 500);
+                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
             } else if (clickCount === 3) {
                 clearTimeout(clickTimer);
                 clickCount = 0;
+                // ดึงค่าปัจจุบันมาใส่ช่องกรอกให้อัตโนมัติ (จำค่าเดิมไว้ตลอด)
+                document.getElementById("bannerType").value = currentBannerData.type || 'image';
+                document.getElementById("bannerUrl").value = currentBannerData.rawUrl || currentBannerData.url || '';
+                document.getElementById("bannerTitleInput").value = currentBannerData.title || 'อาเต๋า';
+                document.getElementById("bannerSubInput").value = currentBannerData.subtitle || '';
                 document.getElementById("adminModal").style.display = "flex";
             }
         }
@@ -286,24 +324,26 @@
             document.getElementById("adminModal").style.display = "none";
         }
 
-        // โหลดแบนเนอร์
+        // โหลดแบนเนอร์และเซฟค่าลงตัวแปรกลาง
         async function loadBanner() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "banner"));
                 if (docSnap.exists()) {
-                    const data = docSnap.data();
+                    currentBannerData = docSnap.data();
                     const hero = document.getElementById("heroBanner");
-                    if (data.url) {
-                        let mediaHtml = data.type === "image" 
-                            ? `<img src="${data.url}" class="bg-image" alt="Banner">`
-                            : `<video autoplay loop muted playsinline class="bg-video"><source src="${data.url}" type="video/mp4"></video>`;
+                    
+                    let finalUrl = convertDriveLink(currentBannerData.url);
+                    if (finalUrl) {
+                        let mediaHtml = currentBannerData.type === "image" 
+                            ? `<img src="${finalUrl}" class="bg-image" alt="Banner">`
+                            : `<video autoplay loop muted playsinline class="bg-video"><source src="${finalUrl}" type="video/mp4"></video>`;
 
                         hero.innerHTML = `
                             <div class="overlay"></div>
                             ${mediaHtml}
                             <div class="hero-content">
-                                <h1 id="brandTitle" onclick="handleTitleClick()">${data.title || 'อาเต๋า'}</h1>
-                                <p>${data.subtitle || ''}</p>
+                                <h1 id="brandTitle" onclick="handleTitleClick()">${currentBannerData.title || 'อาเต๋า'}</h1>
+                                <p>${currentBannerData.subtitle || ''}</p>
                             </div>
                             <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
                         `;
@@ -312,7 +352,7 @@
             } catch (e) { console.log("ใช้ค่าเริ่มต้น"); }
         }
 
-        // โหลดโพสต์
+        // โหลดโพสต์ทั้งหมดมาแสดงด้านล่าง
         async function loadPosts() {
             const container = document.getElementById("postsContainer");
             try {
@@ -355,11 +395,15 @@
 
         window.saveBanner = async function() {
             const type = document.getElementById("bannerType").value;
-            const url = document.getElementById("bannerUrl").value;
+            let rawUrl = document.getElementById("bannerUrl").value;
             const title = document.getElementById("bannerTitleInput").value;
             const subtitle = document.getElementById("bannerSubInput").value;
+            
+            // แปลงลิงก์ให้อัตโนมัติถ้าเป็น Google Drive
+            let url = convertDriveLink(rawUrl);
+
             try {
-                await setDoc(doc(db, "settings", "banner"), { type, url, title, subtitle });
+                await setDoc(doc(db, "settings", "banner"), { type, url, rawUrl, title, subtitle });
                 alert("บันทึกแบนเนอร์สำเร็จ!");
                 location.reload();
             } catch (e) {
