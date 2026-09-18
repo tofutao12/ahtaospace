@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHTAO // SPACE</title>
+    <title>อาเต๋า // สเปซส่วนตัว</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Prompt:wght@300;400&family=Sarabun:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -32,7 +32,7 @@
             color: var(--accent);
         }
 
-        /* --- Hero Section (Cinematic Banner) --- */
+        /* --- ส่วนแบนเนอร์ (Hero Section) --- */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -64,7 +64,7 @@
 
         .hero-content { z-index: 1; padding: 20px; }
         
-        /* ชื่อที่เอาไว้กด 3 ครั้ง */
+        /* จุดที่คลิก 3 ครั้งเพื่อเปิดหลังบ้าน */
         .hero-content h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(3rem, 6vw, 5rem);
@@ -73,8 +73,8 @@
             text-transform: uppercase;
             color: #fff;
             text-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            cursor: pointer; /* เมาส์เปลี่ยนเป็นรูปมือเมื่อชี้ */
-            user-select: none; /* ป้องกันการไฮไลท์ข้อความเวลาดับเบิลคลิก */
+            cursor: pointer;
+            user-select: none;
             transition: opacity 0.2s;
         }
         .hero-content h1:active { opacity: 0.5; }
@@ -102,7 +102,7 @@
             0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; }
         }
 
-        /* --- Main Content Section --- */
+        /* --- ส่วนเนื้อหา --- */
         .content-section {
             max-width: 750px; margin: 0 auto; padding: 100px 20px;
         }
@@ -134,7 +134,7 @@
         .media-embed { margin-top: 30px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
         .media-embed iframe { width: 100%; border: none; display: block; }
 
-        /* --- Pop-up Modal สำหรับหลังบ้าน --- */
+        /* --- หน้าต่างป๊อปอัพหลังบ้าน (ภาษาไทย) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
@@ -183,63 +183,63 @@
 </head>
 <body>
 
-    <!-- ส่วนแบนเนอร์ (คลิกที่ชื่อ 3 ครั้งเพื่อเปิดหลังบ้าน) -->
+    <!-- ส่วนแบนเนอร์ -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
         <video autoplay loop muted playsinline class="bg-video">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-water-of-a-lake-1562-large.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
-            <!-- จุดนี้คือที่ให้คลิก 3 ครั้ง -->
-            <h1 id="brandTitle" onclick="handleTitleClick()" title="Secret Control">AHTAO</h1>
-            <p id="brandSub">Fragments of Silence</p>
+            <!-- คลิกที่คำว่า "อาเต๋า" 3 ครั้งติดกันเพื่อเปิดหลังบ้าน -->
+            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิก 3 ครั้งเพื่อจัดการระบบ">อาเต๋า</h1>
+            <p id="brandSub">พื้นที่แห่งความรู้สึกและถ้อยคำ</p>
         </div>
-        <div class="scroll-indicator">Scroll to explore</div>
+        <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
-    <!-- ส่วนแสดงเนื้อหาโพสต์ -->
+    <!-- ส่วนแสดงเนื้อหา -->
     <main class="content-section" id="postsContainer">
-        <p style="text-align: center; color: var(--text-muted); font-style: italic;">Loading fragments...</p>
+        <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดเรื่องราว...</p>
     </main>
 
-    <!-- 🪟 Pop-up หลังบ้าน (ซ่อนอยู่ จะเด้งขึ้นมาเมื่อคลิกชื่อ 3 ครั้ง) -->
+    <!-- ป๊อปอัพหลังบ้าน (ภาษาไทย) -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeAdmin()">✕</button>
             
             <div class="form-block">
-                <h2>Configure Banner</h2>
-                <label>Banner Type</label>
+                <h2>ตั้งค่าแบนเนอร์ (วิดีโอหรือรูปภาพ)</h2>
+                <label>ประเภทแบนเนอร์</label>
                 <select id="bannerType">
-                    <option value="video">Video (.mp4)</option>
-                    <option value="image">Image (.jpg / .png)</option>
+                    <option value="video">วิดีโอ (.mp4)</option>
+                    <option value="image">รูปภาพ (.jpg / .png)</option>
                 </select>
-                <label>Media URL (Video or Image Link)</label>
+                <label>ลิงก์สื่อ (ใส่ลิงก์วิดีโอ หรือ ลิงก์รูปภาพ)</label>
                 <input type="text" id="bannerUrl" placeholder="https://...">
-                <label>Main Title</label>
-                <input type="text" id="bannerTitleInput" value="AHTAO">
-                <label>Subtitle</label>
-                <input type="text" id="bannerSubInput" value="Fragments of Silence">
-                <button class="submit-btn" onclick="saveBanner()">Update Banner</button>
+                <label>ชื่อหัวข้อหลัก</label>
+                <input type="text" id="bannerTitleInput" value="อาเต๋า">
+                <label>ข้อความรองด้านล่าง</label>
+                <input type="text" id="bannerSubInput" value="พื้นที่แห่งความรู้สึกและถ้อยคำ">
+                <button class="submit-btn" onclick="saveBanner()">บันทึกแบนเนอร์</button>
             </div>
 
             <div class="form-block" style="margin-bottom: 0;">
-                <h2>Create New Fragment</h2>
-                <label>Type</label>
+                <h2>เขียนเรื่องราว / โพสต์ใหม่</h2>
+                <label>ประเภทโพสต์</label>
                 <select id="postType">
-                    <option value="text">General Thought</option>
-                    <option value="poem">Poetry / Quote</option>
-                    <option value="music">Soundtrack (Spotify)</option>
+                    <option value="text">ข้อความทั่วไป / บันทึกสั้น</option>
+                    <option value="poem">บทกวี / คำคม</option>
+                    <option value="music">เพลง (Spotify Embed)</option>
                 </select>
-                <label>Date / Period</label>
-                <input type="text" id="postDate" placeholder="September 19, 2026">
-                <label>Title</label>
-                <input type="text" id="postTitle" placeholder="Fragment title...">
-                <label>Content / Short Message</label>
-                <textarea id="postContent" rows="3" placeholder="Write your brief thoughts..."></textarea>
-                <label>Spotify Embed URL (Only for Music type)</label>
+                <label>วันที่</label>
+                <input type="text" id="postDate" placeholder="19 กันยายน 2026">
+                <label>หัวข้อเรื่อง (ถ้ามี)</label>
+                <input type="text" id="postTitle" placeholder="ชื่อเรื่อง...">
+                <label>เนื้อหา / ประโยคสั้นๆ</label>
+                <textarea id="postContent" rows="3" placeholder="พิมพ์ข้อความของคุณที่นี่..."></textarea>
+                <label>ลิงก์ Spotify (เฉพาะกรณีเลือกประเภทเพลง)</label>
                 <input type="text" id="postMediaUrl" placeholder="https://open.spotify.com/embed/track/...">
-                <button class="submit-btn" onclick="createPost()">Publish Fragment</button>
+                <button class="submit-btn" onclick="createPost()">โพสต์ลงเว็บไซต์</button>
             </div>
         </div>
     </div>
@@ -248,7 +248,7 @@
         <p>&copy; Ahtao Space. All rights reserved.</p>
     </footer>
 
-    <!-- Script ระบบ Firebase และตัวจับคลิก 3 ครั้ง -->
+    <!-- ระบบ JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -265,7 +265,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ระบบจับการคลิกชื่อ 3 ครั้งติดกัน
+        // ตัวจับคลิกที่คำว่า "อาเต๋า" 3 ครั้ง
         let clickCount = 0;
         let clickTimer = null;
 
@@ -273,12 +273,12 @@
             clickCount++;
             if (clickCount === 1) {
                 clickTimer = setTimeout(() => {
-                    clickCount = 0; // รีเซ็ตถ้าคลิกช้าเกินไป (ภายใน 500 มิลลิวินาทีต้องคลิกให้ครบ)
+                    clickCount = 0;
                 }, 500);
             } else if (clickCount === 3) {
                 clearTimeout(clickTimer);
                 clickCount = 0;
-                document.getElementById("adminModal").style.display = "flex"; // เปิดป๊อปอัพ
+                document.getElementById("adminModal").style.display = "flex";
             }
         }
 
@@ -302,14 +302,14 @@
                             <div class="overlay"></div>
                             ${mediaHtml}
                             <div class="hero-content">
-                                <h1 id="brandTitle" onclick="handleTitleClick()">${data.title || 'AHTAO'}</h1>
+                                <h1 id="brandTitle" onclick="handleTitleClick()">${data.title || 'อาเต๋า'}</h1>
                                 <p>${data.subtitle || ''}</p>
                             </div>
-                            <div class="scroll-indicator">Scroll to explore</div>
+                            <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
                         `;
                     }
                 }
-            } catch (e) { console.log("Default banner used"); }
+            } catch (e) { console.log("ใช้ค่าเริ่มต้น"); }
         }
 
         // โหลดโพสต์
@@ -318,7 +318,7 @@
             try {
                 const querySnapshot = await getDocs(collection(db, "posts"));
                 if (querySnapshot.empty) {
-                    container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-style: italic;">No fragments recorded yet.</p>`;
+                    container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-style: italic;">ยังไม่มีเรื่องราวในตอนนี้...</p>`;
                     return;
                 }
                 
@@ -349,7 +349,7 @@
                     `;
                 });
             } catch (e) {
-                container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">Connecting to database...</p>`;
+                container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">กำลังเชื่อมต่อฐานข้อมูล...</p>`;
             }
         }
 
@@ -360,10 +360,10 @@
             const subtitle = document.getElementById("bannerSubInput").value;
             try {
                 await setDoc(doc(db, "settings", "banner"), { type, url, title, subtitle });
-                alert("Banner updated.");
+                alert("บันทึกแบนเนอร์สำเร็จ!");
                 location.reload();
             } catch (e) {
-                alert("Error: " + e.message);
+                alert("เกิดข้อผิดพลาด: " + e.message);
             }
         }
 
@@ -379,10 +379,10 @@
                     type, date, title, content, mediaUrl,
                     createdAt: new Date()
                 });
-                alert("Fragment published.");
+                alert("โพสต์เรื่องราวสำเร็จ!");
                 location.reload();
             } catch (e) {
-                alert("Error: " + e.message);
+                alert("เกิดข้อผิดพลาด: " + e.message);
             }
         }
 
