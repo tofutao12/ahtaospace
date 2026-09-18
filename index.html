@@ -32,7 +32,7 @@
             color: var(--accent);
         }
 
-        /* --- ส่วนแบนเนอร์ (รูป/วิดีโอจะอยู่ "ข้างหลังชื่อ" ตรงนี้) --- */
+        /* --- ส่วนแบนเนอร์ (วิดีโอ/GIF/รูปภาพ อยู่หลังชื่อ) --- */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -58,13 +58,13 @@
         .overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 5, 0.65); /* ความมืดทับหลังภาพเพื่อให้ตัวหนังสือเด่นขึ้น */
+            background: rgba(5, 5, 5, 0.65);
             z-index: -1;
         }
 
         .hero-content { z-index: 1; padding: 20px; }
         
-        /* จุดคลิก 3 ครั้งเพื่อเปิดหลังบ้าน */
+        /* คลิกที่ชื่อ 3 ครั้งเพื่อเปิดหลังบ้าน */
         .hero-content h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(3rem, 6vw, 5rem);
@@ -102,7 +102,7 @@
             0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; }
         }
 
-        /* --- ส่วนแสดงเนื้อหา (โพสต์จะเรียงลงมาตรงนี้) --- */
+        /* --- ส่วนแสดงเนื้อหาโพสต์ (เรียงลงด้านล่าง) --- */
         .content-section {
             max-width: 750px; margin: 0 auto; padding: 100px 20px;
         }
@@ -122,18 +122,24 @@
             letter-spacing: 3px; text-transform: uppercase;
             font-family: 'Cinzel', serif;
         }
-        .entry-card h2 { font-size: 1.5rem; margin-bottom: 25px; }
-        .entry-card p { color: #cccccc; font-size: 1.05rem; margin-bottom: 20px; }
+        
+        .entry-card p { color: #cccccc; font-size: 1.05rem; margin-bottom: 10px; }
 
         .poem {
             font-family: 'Sarabun', serif; font-style: italic; color: #b8b8b8;
-            padding: 30px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-            margin: 30px 0; line-height: 2.4; text-align: center; white-space: pre-line; font-size: 1.15rem;
+            padding: 20px 0; margin: 10px 0; line-height: 2.4; text-align: center; white-space: pre-line; font-size: 1.15rem;
         }
 
-        /* ส่วนแสดงเพลง Spotify จะเป็นการ์ดเครื่องเล่นเพลงแทรกตรงนี้ */
-        .media-embed { margin-top: 30px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
+        .media-embed { margin-top: 20px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
         .media-embed iframe { width: 100%; border: none; display: block; }
+
+        /* ปุ่มลบโพสต์ซ่อนมุมขวาบนของการ์ด */
+        .delete-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: none; border: none; color: #444; font-size: 0.8rem;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .delete-btn:hover { color: #ff6b6b; }
 
         /* --- ป๊อปอัพหลังบ้าน --- */
         .modal-overlay {
@@ -189,7 +195,7 @@
 </head>
 <body>
 
-    <!-- แบนเนอร์ (รูป/วิดีโออยู่หลังชื่อตรงนี้) -->
+    <!-- แบนเนอร์หลัก -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
         <video autoplay loop muted playsinline class="bg-video">
@@ -203,43 +209,43 @@
         <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
-    <!-- รายการโพสต์ทั้งหมดจะแสดงเรียงลงมาตรงนี้ -->
+    <!-- รายการโพสต์แสดงเรียงลงมา -->
     <main class="content-section" id="postsContainer">
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดเรื่องราว...</p>
     </main>
 
-    <!-- หน้าต่างหลังบ้าน (ป๊อปอัพ) -->
+    <!-- หน้าต่างหลังบ้าน -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeAdmin()">✕</button>
             
-            <!-- ส่วนที่ 1: ตั้งค่าแบนเนอร์หลังชื่อ -->
+            <!-- ส่วนที่ 1: ตั้งค่าแบนเนอร์ (อยู่หลังชื่อ) -->
             <div class="form-block">
-                <h2>1. ตั้งค่าแบนเนอร์ (ภาพหรือวิดีโอหลังชื่อหลัก)</h2>
-                <div class="section-desc">เปลี่ยนภาพพื้นหลังหรือวิดีโอที่อยู่ด้านหลังชื่อ "อาเต๋า" รวมถึงข้อความใต้ชื่อ</div>
+                <h2>1. ตั้งค่าแบนเนอร์ (ฉากหลังของชื่ออาเต๋า)</h2>
+                <div class="section-desc">รองรับทั้งไฟล์วิดีโอ (.mp4), ภาพเคลื่อนไหว (GIF), หรือรูปภาพจาก Google Drive</div>
                 
                 <label>ประเภทแบนเนอร์</label>
                 <select id="bannerType">
-                    <option value="image">รูปภาพ (รองรับลิงก์ Google Drive)</option>
-                    <option value="video">วิดีโอ (.mp4)</option>
+                    <option value="video">วิดีโอ (.mp4 จาก Pexels หรือลิงก์ตรง)</option>
+                    <option value="image">รูปภาพ / GIF (รองรับลิงก์ Google Drive)</option>
                 </select>
 
-                <label>ลิงก์รูปภาพ หรือ ลิงก์วิดีโอ</label>
-                <input type="text" id="bannerUrl" placeholder="วางลิงก์จาก Google Drive หรือลิงก์ตรงที่นี่...">
+                <label>ลิงก์สื่อ (วางลิงก์วิดีโอ, GIF, หรือรูปภาพ)</label>
+                <input type="text" id="bannerUrl" placeholder="วางลิงก์ที่นี่...">
 
-                <label>ชื่อหลัก (หัวข้อใหญ่)</label>
+                <label>ชื่อหลัก (ตรงกลางจอ)</label>
                 <input type="text" id="bannerTitleInput" value="อาเต๋า">
 
-                <label>ข้อความรอง (ใต้ชื่อ)</label>
+                <label>ข้อความรอง (ใต้ชื่อหลัก)</label>
                 <input type="text" id="bannerSubInput" value="พื้นที่แห่งความรู้สึกและถ้อยคำ">
 
                 <button class="submit-btn" onclick="saveBanner()">บันทึกแบนเนอร์ (จำค่านี้ไว้ตลอด)</button>
             </div>
 
-            <!-- ส่วนที่ 2: เขียนโพสต์ใหม่ -->
+            <!-- ส่วนที่ 2: เขียนโพสต์ใหม่ (พิมพ์ข้อความเดี่ยวๆ ไม่ต้องมีชื่อเรื่อง) -->
             <div class="form-block" style="margin-bottom: 0;">
-                <h2>2. เขียนโพสต์ใหม่ (จะแสดงเรียงต่อกันด้านล่างเว็บ)</h2>
-                <div class="section-desc">เลือกประเภทสิ่งที่อยากโพสต์ เช่น ข้อความสั้นๆ บทกวี หรือแปะเพลงจาก Spotify</div>
+                <h2>2. เขียนโพสต์ใหม่ (แสดงเรียงลงด้านล่างเว็บ)</h2>
+                <div class="section-desc">พิมพ์ความรู้สึกสั้นๆ บทกวี หรือแปะเพลงจาก Spotify ได้ทันทีโดยไม่ต้องใส่ชื่อเรื่อง</div>
 
                 <label>ประเภทโพสต์</label>
                 <select id="postType">
@@ -248,14 +254,11 @@
                     <option value="music">เพลง (แสดงเครื่องเล่นเพลง Spotify)</option>
                 </select>
 
-                <label>วันที่</label>
+                <label>วันที่ (ไม่ใส่ก็ได้)</label>
                 <input type="text" id="postDate" placeholder="เช่น 19 กันยายน 2026">
 
-                <label>หัวข้อเรื่อง (ถ้ามี)</label>
-                <input type="text" id="postTitle" placeholder="ชื่อเรื่อง...">
-
-                <label>เนื้อหา / ประโยคสั้นๆ</label>
-                <textarea id="postContent" rows="3" placeholder="พิมพ์ข้อความของคุณที่นี่..."></textarea>
+                <label>เนื้อหา / ความรู้สึกของคุณ</label>
+                <textarea id="postContent" rows="4" placeholder="พิมพ์ข้อความของคุณที่นี่..."></textarea>
 
                 <label>ลิงก์เพลง Spotify (เฉพาะกรณีเลือกประเภทเพลง)</label>
                 <input type="text" id="postMediaUrl" placeholder="https://open.spotify.com/embed/track/...">
@@ -269,10 +272,10 @@
         <p>&copy; Ahtao Space. All rights reserved.</p>
     </footer>
 
-    <!-- ระบบแปลงลิงก์ Google Drive และจัดการฐานข้อมูล -->
+    <!-- ระบบ JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBUsVYDVPbAfEwlmOqvLel8lbUsclZVxHo",
@@ -286,9 +289,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentBannerData = { type: 'image', url: '', title: 'อาเต๋า', subtitle: 'พื้นที่แห่งความรู้สึกและถ้อยคำ' };
+        let currentBannerData = { type: 'video', url: '', title: 'อาเต๋า', subtitle: 'พื้นที่แห่งความรู้สึกและถ้อยคำ' };
 
-        // แปลงลิงก์ Google Drive ให้เป็นลิงก์รูปภาพที่แสดงผลได้ทันที
+        // แปลงลิงก์ Google Drive
         function convertDriveLink(url) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
@@ -311,8 +314,7 @@
             } else if (clickCount === 3) {
                 clearTimeout(clickTimer);
                 clickCount = 0;
-                // ดึงค่าปัจจุบันมาใส่ช่องกรอกให้อัตโนมัติ (จำค่าเดิมไว้ตลอด)
-                document.getElementById("bannerType").value = currentBannerData.type || 'image';
+                document.getElementById("bannerType").value = currentBannerData.type || 'video';
                 document.getElementById("bannerUrl").value = currentBannerData.rawUrl || currentBannerData.url || '';
                 document.getElementById("bannerTitleInput").value = currentBannerData.title || 'อาเต๋า';
                 document.getElementById("bannerSubInput").value = currentBannerData.subtitle || '';
@@ -324,7 +326,7 @@
             document.getElementById("adminModal").style.display = "none";
         }
 
-        // โหลดแบนเนอร์และเซฟค่าลงตัวแปรกลาง
+        // โหลดแบนเนอร์
         async function loadBanner() {
             try {
                 const docSnap = await getDoc(doc(db, "settings", "banner"));
@@ -332,7 +334,7 @@
                     currentBannerData = docSnap.data();
                     const hero = document.getElementById("heroBanner");
                     
-                    let finalUrl = convertDriveLink(currentBannerData.url);
+                    let finalUrl = currentBannerData.type === "image" ? convertDriveLink(currentBannerData.url) : currentBannerData.url;
                     if (finalUrl) {
                         let mediaHtml = currentBannerData.type === "image" 
                             ? `<img src="${finalUrl}" class="bg-image" alt="Banner">`
@@ -352,7 +354,7 @@
             } catch (e) { console.log("ใช้ค่าเริ่มต้น"); }
         }
 
-        // โหลดโพสต์ทั้งหมดมาแสดงด้านล่าง
+        // โหลดโพสต์ทั้งหมด
         async function loadPosts() {
             const container = document.getElementById("postsContainer");
             try {
@@ -382,8 +384,8 @@
 
                     container.innerHTML += `
                         <article class="entry-card">
-                            <span class="date">${post.date || ''}</span>
-                            ${post.title ? `<h2>${post.title}</h2>` : ''}
+                            <button class="delete-btn" onclick="deletePost('${docSnap.id}')" title="ลบโพสต์นี้">✕ ลบ</button>
+                            ${post.date ? `<span class="date">${post.date}</span>` : ''}
                             ${contentHtml}
                         </article>
                     `;
@@ -399,8 +401,7 @@
             const title = document.getElementById("bannerTitleInput").value;
             const subtitle = document.getElementById("bannerSubInput").value;
             
-            // แปลงลิงก์ให้อัตโนมัติถ้าเป็น Google Drive
-            let url = convertDriveLink(rawUrl);
+            let url = type === "image" ? convertDriveLink(rawUrl) : rawUrl;
 
             try {
                 await setDoc(doc(db, "settings", "banner"), { type, url, rawUrl, title, subtitle });
@@ -414,19 +415,30 @@
         window.createPost = async function() {
             const type = document.getElementById("postType").value;
             const date = document.getElementById("postDate").value;
-            const title = document.getElementById("postTitle").value;
             const content = document.getElementById("postContent").value;
             const mediaUrl = document.getElementById("postMediaUrl").value;
 
             try {
                 await addDoc(collection(db, "posts"), {
-                    type, date, title, content, mediaUrl,
+                    type, date, content, mediaUrl,
                     createdAt: new Date()
                 });
                 alert("โพสต์เรื่องราวสำเร็จ!");
                 location.reload();
             } catch (e) {
                 alert("เกิดข้อผิดพลาด: " + e.message);
+            }
+        }
+
+        window.deletePost = async function(id) {
+            if (confirm("คุณต้องการลบโพสต์นี้ใช่หรือไม่?")) {
+                try {
+                    await deleteDoc(doc(db, "posts", id));
+                    alert("ลบโพสต์สำเร็จ");
+                    location.reload();
+                } catch (e) {
+                    alert("เกิดข้อผิดพลาดในการลบ: " + e.message);
+                }
             }
         }
 
