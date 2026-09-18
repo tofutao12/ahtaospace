@@ -23,7 +23,7 @@
 
         h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--accent); }
 
-        /* --- เมนูรวมปุ่มบรรยากาศ (Dropdown) --- */
+        /* --- เมนูรวมปุ่มบรรยากาศ --- */
         .mood-dropdown { position: fixed; top: 20px; right: 20px; z-index: 999; }
         .glass-btn {
             background: rgba(15, 15, 15, 0.4); border: 1px solid rgba(255, 255, 255, 0.15);
@@ -203,13 +203,13 @@
             <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')"><span>🌒 ราตรีสงัด</span></button>
             <button class="menu-item" id="btn-warm" onclick="setMode('warm')"><span>🕯️ แสงเทียน</span></button>
             <div class="menu-divider"></div>
-            <button class="menu-item" id="soundBtn" onclick="toggleSound()"><span>🔇 ปิดเสียงดนตรี</span></button>
+            <button class="menu-item" id="soundBtn" onclick="toggleSound()"><span>🔇 เปิดเสียงดนตรี</span></button>
         </div>
     </div>
 
-    <!-- แทร็กเสียง (บังคับ preload) -->
-    <audio id="sfxAudio" loop preload="auto" crossorigin="anonymous"></audio>
-    <audio id="musicAudio" loop preload="auto" crossorigin="anonymous"></audio>
+    <!-- แทร็กเสียง -->
+    <audio id="sfxAudio" loop preload="auto"></audio>
+    <audio id="musicAudio" loop preload="auto"></audio>
 
     <!-- แบนเนอร์หลัก -->
     <header class="hero-section" id="heroBanner">
@@ -234,7 +234,6 @@
             
             <div style="margin-bottom: 40px;">
                 <h2>1. ตั้งค่าบรรยากาศแต่ละโหมด</h2>
-                
                 <div class="theme-selector">
                     <label style="color: #fff; margin-top: 0;">เลือกโหมดที่ต้องการแก้ไข:</label>
                     <select id="adminThemeSelect" onchange="loadAdminThemeFields()">
@@ -243,8 +242,7 @@
                         <option value="warm">🕯️ โหมดแสงเทียน (Warmth)</option>
                     </select>
                 </div>
-
-                <div class="section-desc">คุณสามารถใส่ลิงก์ GIF หรือวิดีโอจาก Drive ได้เลย</div>
+                <div class="section-desc">แนะนำให้อัปโหลดวิดีโอและไฟล์เสียง .mp3 ลง Google Drive เพื่อแก้ปัญหาเสียงไม่ดัง</div>
                 
                 <label>ประเภทภาพฉากหลัง</label>
                 <select id="bannerType">
@@ -263,10 +261,10 @@
 
                 <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
 
-                <label>ลิงก์เสียงบรรยากาศ (เสียงฝน, แมลง, ไฟ)</label>
+                <label>ลิงก์เสียงบรรยากาศ (แนะนําลิงก์จาก Google Drive)</label>
                 <input type="text" id="sfxUrl" placeholder="ลิงก์ไฟล์ .mp3 หรือ .ogg">
 
-                <label>ลิงก์เสียงดนตรีคลอ (Music)</label>
+                <label>ลิงก์เสียงดนตรีคลอ (แนะนําลิงก์จาก Google Drive)</label>
                 <input type="text" id="musicUrl" placeholder="ลิงก์ไฟล์ดนตรี .mp3">
 
                 <button class="submit-btn" onclick="saveThemeData()">บันทึกโหมดนี้</button>
@@ -326,29 +324,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // เปลี่ยนลิงก์เพลงใหม่ทั้งหมด ใช้เซิร์ฟเวอร์เสถียร (Direct GitHub Pages)
+        // ให้ค่าว่างไว้รอการโหลดจากฐานข้อมูล 
         let themesData = {
-            rain: {
-                type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-water-of-a-lake-1562-large.mp4',
-                title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น',
-                sfx: 'https://actions.google.com/sounds/v1/weather/rain_on_roof.ogg',
-                music: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3'
-            },
-            midnight: {
-                type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4',
-                title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี',
-                sfx: 'https://actions.google.com/sounds/v1/environment/crickets_at_night.ogg',
-                music: 'https://cdn.pixabay.com/download/audio/2022/01/21/audio_31743c58bb.mp3'
-            },
-            warm: {
-                type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-fire-flames-burning-in-a-fireplace-1647-large.mp4',
-                title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ',
-                sfx: 'https://actions.google.com/sounds/v1/environment/fireplace.ogg',
-                music: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3'
-            }
+            rain: { title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น', type: 'image', url: '', sfx: '', music: '' },
+            midnight: { title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี', type: 'image', url: '', sfx: '', music: '' },
+            warm: { title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ', type: 'image', url: '', sfx: '', music: '' }
         };
 
-        let currentMode = 'rain';
+        let currentMode = localStorage.getItem('ahtao_saved_mode') || 'rain'; // โหลดโหมดที่จำไว้ หรือใช้ rain
         let isAudioPlaying = false;
 
         function convertDriveLink(url, isMedia = false) {
@@ -374,27 +357,21 @@
         async function fetchAllThemes() {
             try {
                 const snapRain = await getDoc(doc(db, "settings", "theme_rain"));
-                if(snapRain.exists()) themesData.rain = snapRain.data();
+                if(snapRain.exists()) Object.assign(themesData.rain, snapRain.data());
                 
                 const snapMid = await getDoc(doc(db, "settings", "theme_midnight"));
-                if(snapMid.exists()) themesData.midnight = snapMid.data();
+                if(snapMid.exists()) Object.assign(themesData.midnight, snapMid.data());
                 
                 const snapWarm = await getDoc(doc(db, "settings", "theme_warm"));
-                if(snapWarm.exists()) themesData.warm = snapWarm.data();
-            } catch (e) { console.log("โหลดใช้ค่าเริ่มต้น"); }
+                if(snapWarm.exists()) Object.assign(themesData.warm, snapWarm.data());
+            } catch (e) { console.log("โหลดข้อมูลล้มเหลว"); }
             
-            // เตรียมไฟล์เสียงล่วงหน้า เพื่อบังคับเบราว์เซอร์ให้โหลด (ป้องกันเพลงไม่ดัง)
-            document.getElementById("sfxAudio").src = convertDriveLink(themesData.rain.sfx, true);
-            document.getElementById("musicAudio").src = convertDriveLink(themesData.rain.music, true);
-            document.getElementById("sfxAudio").load();
-            document.getElementById("musicAudio").load();
-            
-            setMode('rain'); 
+            setMode(currentMode); 
         }
 
         function renderBg(type, url) {
             const container = document.getElementById("heroBgContainer");
-            if (!url) return;
+            if (!url) { container.innerHTML = ''; return; }
             if (type === "image") {
                 container.innerHTML = `<img src="${url}" class="bg-image" alt="Banner">`;
             } else {
@@ -404,8 +381,12 @@
 
         window.setMode = function(mode) {
             currentMode = mode;
+            localStorage.setItem('ahtao_saved_mode', mode); // บันทึกโหมดล่าสุด
+
             document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + mode).classList.add('active');
+            let activeBtn = document.getElementById('btn-' + mode);
+            if(activeBtn) activeBtn.classList.add('active');
+            
             document.getElementById("moodMenu").classList.remove("show");
             document.body.className = `theme-${mode}`;
 
@@ -419,21 +400,18 @@
             const sfx = document.getElementById("sfxAudio");
             const music = document.getElementById("musicAudio");
             
-            // ตรวจสอบว่าเสียงเปลี่ยนโหมดหรือไม่
             let currentSfx = convertDriveLink(data.sfx, true);
             let currentMusic = convertDriveLink(data.music, true);
             
             if(sfx.src !== currentSfx) sfx.src = currentSfx;
             if(music.src !== currentMusic) music.src = currentMusic;
             
-            sfx.volume = mode === 'rain' ? 0.2 : 0.5; 
-            music.volume = 0.5;
+            sfx.volume = mode === 'rain' ? 0.3 : 0.6; 
+            music.volume = 0.6;
 
             if (isAudioPlaying) { 
-                let playPromise1 = sfx.play();
-                let playPromise2 = music.play();
-                if (playPromise1 !== undefined) { playPromise1.catch(e => console.log("SFX Blocked:", e)); }
-                if (playPromise2 !== undefined) { playPromise2.catch(e => console.log("Music Blocked:", e)); }
+                if (sfx.src && sfx.src !== window.location.href) sfx.play().catch(e => console.log("SFX Play Error"));
+                if (music.src && music.src !== window.location.href) music.play().catch(e => console.log("Music Play Error"));
             }
         }
 
@@ -447,12 +425,8 @@
                 btn.innerHTML = "<span>🔊 เปิดเสียงดนตรี</span>";
                 isAudioPlaying = false;
             } else {
-                let playPromise1 = sfx.play();
-                let playPromise2 = music.play();
-                
-                if (playPromise1 !== undefined) { playPromise1.catch(e => console.log("SFX Play Error:", e)); }
-                if (playPromise2 !== undefined) { playPromise2.catch(e => console.log("Music Play Error:", e)); }
-                
+                if (sfx.src && sfx.src !== window.location.href) sfx.play().catch(e => console.log("SFX Error"));
+                if (music.src && music.src !== window.location.href) music.play().catch(e => console.log("Music Error"));
                 btn.innerHTML = "<span>🔇 ปิดเสียงดนตรี</span>";
                 isAudioPlaying = true;
             }
@@ -580,7 +554,6 @@
             }
         }
 
-        // เริ่มโหลดข้อมูลทั้งหมด
         fetchAllThemes();
         loadPosts();
     </script>
