@@ -12,7 +12,6 @@
             --text-muted: #888888; --accent: #ffffff;
         }
 
-        /* ล็อกการคลุมดำและคัดลอกข้อความบนหน้าเว็บ */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
@@ -28,7 +27,6 @@
 
         h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--accent); }
 
-        /* --- ละอองบรรยากาศลอยเบาๆ --- */
         .ambient-particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; overflow: hidden; opacity: 0.3;
@@ -43,7 +41,6 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- เมนูด้านบนขวา (3 โหมด + ปุ่มสุ่มความทรงจำ) --- */
         .top-controls { position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; gap: 10px; align-items: center; }
         .glass-btn {
             background: rgba(15, 15, 15, 0.5); border: 1px solid rgba(255, 255, 255, 0.15);
@@ -71,7 +68,6 @@
         .menu-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .menu-item.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
 
-        /* --- แบนเนอร์ฉากหลัง --- */
         .hero-section {
             position: relative; height: 100vh; display: flex;
             align-items: center; justify-content: center;
@@ -115,7 +111,6 @@
         }
         @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* --- ส่วนแสดงโพสต์ --- */
         .content-section { max-width: 650px; margin: 0 auto; padding: 60px 20px; z-index: 1; position: relative; }
         .entry-card {
             background: transparent; border: none;
@@ -171,7 +166,6 @@
             font-size: 0.75rem; letter-spacing: 1px; pointer-events: none;
         }
 
-        /* --- หลังบ้านแบ่ง 2 ฝั่ง ซ้าย-ขวา --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
@@ -532,7 +526,7 @@
             });
         }
 
-        // ระบบแชร์เป็นการ์ดรูปภาพ (แก้ไขการตัดคำและจัดกึ่งกลางการ์ดแบบสมบูรณ์ 100%)
+        // ระบบแชร์เป็นการ์ดรูปภาพ (บังคับตัดคำแบบทีละตัวอักษร/คำ ป้องกันการล้นขอบ 100%)
         window.shareAsCard = function(btn) {
             const card = btn.closest('.entry-card');
             const textEl = card.querySelector('p, .poem');
@@ -543,55 +537,52 @@
             canvas.height = 1080;
             const ctx = canvas.getContext('2d');
 
-            // 1. พื้นหลังดำสนิทมินิมอล
             ctx.fillStyle = "#0c0c0c";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. กรอบขอบการ์ดบางๆ
             ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
             ctx.lineWidth = 4;
             ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
-            // 3. ตั้งค่าฟอนต์บทกวี
             ctx.fillStyle = "#e1e1e1";
-            ctx.font = "italic 40px 'Sarabun', sans-serif";
+            ctx.font = "italic 38px 'Sarabun', sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
-            // ฟังก์ชันตัดคำและจัดกึ่งกลางบรรทัดแบบสมบูรณ์
-            function getWrappedLines(context, text, maxWidth) {
+            // ฟังก์ชันตัดบรรทัดใหม่ที่ปลอดภัย ตัดคำเป๊ะไม่ล้นขอบ
+            function getSafeLines(context, text, maxWidth) {
                 let paragraphs = text.split('\n');
                 let lines = [];
                 for (let p of paragraphs) {
                     let words = p.split(' ');
-                    let line = '';
-                    for (let n = 0; n < words.length; n++) {
-                        let testLine = line + words[n] + ' ';
+                    let currentLine = '';
+                    for (let i = 0; i < words.length; i++) {
+                        let testLine = currentLine + (currentLine === '' ? '' : ' ') + words[i];
                         let metrics = context.measureText(testLine);
-                        if (metrics.width > maxWidth && n > 0) {
-                            lines.push(line.trim());
-                            line = words[n] + ' ';
+                        if (metrics.width > maxWidth && currentLine !== '') {
+                            lines.push(currentLine);
+                            currentLine = words[i];
                         } else {
-                            line = testLine;
+                            currentLine = testLine;
                         }
                     }
-                    lines.push(line.trim());
+                    if (currentLine) {
+                        lines.push(currentLine);
+                    }
                 }
                 return lines;
             }
 
-            const maxWidth = 750; // กำหนดความกว้างไม่ให้ล้นขอบ
-            const lineHeight = 65;
-            let lines = getWrappedLines(ctx, poemText, maxWidth);
+            const maxWidth = 650; // บีบเข้ามาให้ปลอดภัย ไม่ชนกรอบแน่นอน
+            const lineHeight = 60;
+            let lines = getSafeLines(ctx, poemText, maxWidth);
 
-            // คำนวณจุดเริ่มต้นแนวตั้งให้อยู่กึ่งกลางการ์ดพอดีเป๊ะ
-            let startY = (canvas.height / 2) - ((lines.length * lineHeight) / 2) - 30;
+            let startY = (canvas.height / 2) - ((lines.length * lineHeight) / 2) - 40;
 
             for (let i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], canvas.width / 2, startY + (i * lineHeight));
             }
 
-            // 4. เครดิตด้านล่าง (จัดกึ่งกลางและชัดเจน)
             ctx.fillStyle = "#ffffff";
             ctx.font = "500 28px 'Sarabun', sans-serif";
             ctx.textAlign = "center";
