@@ -532,7 +532,7 @@
             });
         }
 
-        // ระบบแชร์เป็นการ์ดรูปภาพ แก้ไขการจัดวางและขนาดตัวหนังสือให้สวยงาม อ่านง่าย ชัดเจน
+        // ระบบแชร์เป็นการ์ดรูปภาพ (แก้ไขการตัดคำและจัดกึ่งกลางการ์ดแบบสมบูรณ์ 100%)
         window.shareAsCard = function(btn) {
             const card = btn.closest('.entry-card');
             const textEl = card.querySelector('p, .poem');
@@ -543,22 +543,23 @@
             canvas.height = 1080;
             const ctx = canvas.getContext('2d');
 
-            // พื้นหลังดำสนิทมินิมอล
+            // 1. พื้นหลังดำสนิทมินิมอล
             ctx.fillStyle = "#0c0c0c";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // กรอบขอบการ์ดบางๆ
+            // 2. กรอบขอบการ์ดบางๆ
             ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
             ctx.lineWidth = 4;
             ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
-            // ตั้งค่าฟอนต์บทกวีให้อยู่ตรงกลางพอดี ไม่ล้นขอบ
+            // 3. ตั้งค่าฟอนต์บทกวี
             ctx.fillStyle = "#e1e1e1";
             ctx.font = "italic 40px 'Sarabun', sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
-            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            // ฟังก์ชันตัดคำและจัดกึ่งกลางบรรทัดแบบสมบูรณ์
+            function getWrappedLines(context, text, maxWidth) {
                 let paragraphs = text.split('\n');
                 let lines = [];
                 for (let p of paragraphs) {
@@ -568,26 +569,32 @@
                         let testLine = line + words[n] + ' ';
                         let metrics = context.measureText(testLine);
                         if (metrics.width > maxWidth && n > 0) {
-                            lines.push(line);
+                            lines.push(line.trim());
                             line = words[n] + ' ';
                         } else {
                             line = testLine;
                         }
                     }
-                    lines.push(line);
+                    lines.push(line.trim());
                 }
-                let startY = y - (lines.length * lineHeight) / 2;
-                for (let k = 0; k < lines.length; k++) {
-                    context.fillText(lines[k], x, startY + (k * lineHeight));
-                }
+                return lines;
             }
 
-            // คำนวณความกว้างและเว้นบรรทัดให้อ่านสบายตา
-            wrapText(ctx, poemText, canvas.width / 2, canvas.height / 2 - 50, 800, 70);
+            const maxWidth = 750; // กำหนดความกว้างไม่ให้ล้นขอบ
+            const lineHeight = 65;
+            let lines = getWrappedLines(ctx, poemText, maxWidth);
 
-            // เครดิตด้านล่าง (ปรับให้ใหญ่และสว่างขึ้น อ่านง่ายชัดเจน 100%)
+            // คำนวณจุดเริ่มต้นแนวตั้งให้อยู่กึ่งกลางการ์ดพอดีเป๊ะ
+            let startY = (canvas.height / 2) - ((lines.length * lineHeight) / 2) - 30;
+
+            for (let i = 0; i < lines.length; i++) {
+                ctx.fillText(lines[i], canvas.width / 2, startY + (i * lineHeight));
+            }
+
+            // 4. เครดิตด้านล่าง (จัดกึ่งกลางและชัดเจน)
             ctx.fillStyle = "#ffffff";
             ctx.font = "500 28px 'Sarabun', sans-serif";
+            ctx.textAlign = "center";
             ctx.fillText("✦ AHTAO SPACE", canvas.width / 2, canvas.height - 130);
 
             ctx.fillStyle = "#aaaaaa";
