@@ -115,11 +115,11 @@
         }
         @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* --- ส่วนแสดงโพสต์ (ระยะห่างพอดีๆ อ่านสบายตา) --- */
+        /* --- ส่วนแสดงโพสต์ --- */
         .content-section { max-width: 650px; margin: 0 auto; padding: 60px 20px; z-index: 1; position: relative; }
         .entry-card {
             background: transparent; border: none;
-            padding: 10px 0; margin-bottom: 35px; position: relative; /* ระยะห่างพอดีๆ ไม่ห่างเกินไป */
+            padding: 10px 0; margin-bottom: 35px; position: relative;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             text-align: left;
         }
@@ -171,7 +171,7 @@
             font-size: 0.75rem; letter-spacing: 1px; pointer-events: none;
         }
 
-        /* --- หลังบ้านแบ่ง 2 ฝั่ง ซ้าย-ขวา (Side-by-Side) --- */
+        /* --- หลังบ้านแบ่ง 2 ฝั่ง ซ้าย-ขวา --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
@@ -188,7 +188,6 @@
         .close-btn { background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; }
         .close-btn:hover { color: #fff; }
 
-        /* เลย์เอาต์ 2 ฝั่ง ซ้าย-ขวา */
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media(max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
         
@@ -227,7 +226,6 @@
 
     <div class="ambient-particles" id="ambientParticles"></div>
 
-    <!-- เมนูด้านบนขวา (3 โหมด + ปุ่มสุ่มความทรงจำ) -->
     <div class="top-controls">
         <button class="glass-btn" onclick="randomMemory()" title="สุ่มอ่านความรู้สึกในอดีต">🌠 สุ่มความทรงจำ</button>
         <div style="position: relative;">
@@ -240,7 +238,6 @@
         </div>
     </div>
 
-    <!-- แบนเนอร์ฉากหลัง -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
         <img src="" class="bg-image" id="bgImageElement" alt="Banner">
@@ -251,12 +248,10 @@
         <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
-    <!-- ส่วนแสดงโพสต์ -->
     <main class="content-section" id="postsContainer">
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดความรู้สึก...</p>
     </main>
 
-    <!-- หลังบ้านแบ่ง 2 ฝั่ง ซ้าย-ขวา -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -265,7 +260,6 @@
             </div>
 
             <div class="admin-grid">
-                <!-- ฝั่งซ้าย: ตั้งค่าแบนเนอร์แยกตามโหมด -->
                 <div class="admin-pane">
                     <h3>🌄 ฝั่งซ้าย: ตั้งค่าหน้าเว็บ (แบนเนอร์)</h3>
                     
@@ -282,7 +276,6 @@
                     <button class="submit-btn" style="background: #222; color: #fff; border: 1px solid #444;" onclick="saveBannerData()">อัปเดตแบนเนอร์โหมดนี้</button>
                 </div>
 
-                <!-- ฝั่งขวา: โพสต์ความรู้สึกใหม่ -->
                 <div class="admin-pane">
                     <h3>✍️ ฝั่งขวา: สร้างความรู้สึกใหม่</h3>
 
@@ -320,7 +313,6 @@
 
     <footer><p>&copy; AHTAO SPACE.</p></footer>
 
-    <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -467,7 +459,6 @@
                 
                 allPostsGlobal = [];
                 querySnapshot.forEach((docSnap) => { allPostsGlobal.push({ id: docSnap.id, ...docSnap.data() }); });
-                // เรียงลำดับตามวันที่สร้างจริง (Timeline)
                 allPostsGlobal.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
                 renderPostsList(allPostsGlobal);
@@ -513,7 +504,6 @@
             });
         }
 
-        // ปุ่มสุ่มความทรงจำ (🌠)
         window.randomMemory = function() {
             if (allPostsGlobal.length === 0) return;
             const randomPost = allPostsGlobal[Math.floor(Math.random() * allPostsGlobal.length)];
@@ -535,7 +525,6 @@
             } catch(e) {}
         }
 
-        // คัดลอกลิงก์โพสต์
         window.copyPostLink = function(id) {
             const link = SITE_URL + "#post-" + id;
             navigator.clipboard.writeText(link).then(() => {
@@ -543,7 +532,7 @@
             });
         }
 
-        // ระบบแชร์เป็นการ์ดรูปภาพอัตโนมัติ
+        // ระบบแชร์เป็นการ์ดรูปภาพ แก้ไขการจัดวางและขนาดตัวหนังสือให้สวยงาม อ่านง่าย ชัดเจน
         window.shareAsCard = function(btn) {
             const card = btn.closest('.entry-card');
             const textEl = card.querySelector('p, .poem');
@@ -554,15 +543,18 @@
             canvas.height = 1080;
             const ctx = canvas.getContext('2d');
 
+            // พื้นหลังดำสนิทมินิมอล
             ctx.fillStyle = "#0c0c0c";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+            // กรอบขอบการ์ดบางๆ
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
             ctx.lineWidth = 4;
             ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
+            // ตั้งค่าฟอนต์บทกวีให้อยู่ตรงกลางพอดี ไม่ล้นขอบ
             ctx.fillStyle = "#e1e1e1";
-            ctx.font = "italic 42px 'Sarabun', sans-serif";
+            ctx.font = "italic 40px 'Sarabun', sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
@@ -590,15 +582,17 @@
                 }
             }
 
-            wrapText(ctx, poemText, canvas.width / 2, canvas.height / 2 - 40, 850, 75);
+            // คำนวณความกว้างและเว้นบรรทัดให้อ่านสบายตา
+            wrapText(ctx, poemText, canvas.width / 2, canvas.height / 2 - 50, 800, 70);
 
-            ctx.fillStyle = "#888888";
-            ctx.font = "300 24px 'Sarabun', sans-serif";
-            ctx.fillText("✦ AHTAO SPACE", canvas.width / 2, canvas.height - 140);
+            // เครดิตด้านล่าง (ปรับให้ใหญ่และสว่างขึ้น อ่านง่ายชัดเจน 100%)
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "500 28px 'Sarabun', sans-serif";
+            ctx.fillText("✦ AHTAO SPACE", canvas.width / 2, canvas.height - 130);
 
-            ctx.fillStyle = "#555555";
-            ctx.font = "20px 'Cinzel', serif";
-            ctx.fillText(SITE_URL, canvas.width / 2, canvas.height - 100);
+            ctx.fillStyle = "#aaaaaa";
+            ctx.font = "22px 'Sarabun', sans-serif";
+            ctx.fillText(SITE_URL, canvas.width / 2, canvas.height - 90);
 
             canvas.toBlob(async (blob) => {
                 const file = new File([blob], "Ahtao-Space-Poem.png", { type: "image/png" });
