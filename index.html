@@ -12,19 +12,32 @@
             --text-muted: #888888; --accent: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ล็อกการคลุมดำและคัดลอกข้อความบนหน้าเว็บทั้งหมด */
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE10+/Edge */
+            user-select: none;         /* Standard */
+        }
+
+        /* ยกเว้นให้พิมพ์ในช่องกรอกหลังบ้านได้ปกติ */
+        input, textarea, select {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
 
         body {
             background-color: var(--bg-color); color: var(--text-main);
             font-family: 'Sarabun', sans-serif; line-height: 1.9;
-            overflow-x: hidden; letter-spacing: 0.3px;
-            transition: background-color 0.8s ease;
-            position: relative;
+            overflow-x: hidden; letter-spacing: 0.3px; position: relative;
         }
 
         h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--accent); }
 
-        /* --- ละอองบรรยากาศลอยเบาๆ (Ambient Particles) --- */
+        /* --- ละอองบรรยากาศลอยเบาๆ --- */
         .ambient-particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; overflow: hidden; opacity: 0.3;
@@ -39,50 +52,12 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- เมนูรวมปุ่มบรรยากาศ --- */
-        .mood-dropdown { position: fixed; top: 20px; right: 20px; z-index: 999; }
-        .glass-btn {
-            background: rgba(15, 15, 15, 0.4); border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #ccc; padding: 10px 18px; border-radius: 30px;
-            font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            backdrop-filter: blur(10px); transition: all 0.3s ease;
-            font-family: 'Sarabun', sans-serif; letter-spacing: 1px;
-        }
-        .glass-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
-
-        .mood-menu {
-            display: none; position: absolute; top: 120%; right: 0;
-            background: rgba(15, 15, 15, 0.85); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; padding: 8px; backdrop-filter: blur(15px);
-            width: max-content; min-width: 160px;
-            flex-direction: column; gap: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); transform-origin: top right;
-            z-index: 1000;
-        }
-        .mood-menu.show { display: flex; animation: fadeInDown 0.3s ease forwards; }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .menu-item {
-            background: transparent; border: none; color: #aaa; padding: 12px 16px;
-            text-align: left; font-family: 'Sarabun', sans-serif; font-size: 0.9rem;
-            cursor: pointer; border-radius: 8px; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .menu-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .menu-item.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
-        .menu-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 6px 0; }
-
         /* --- แบนเนอร์ฉากหลัง --- */
         .hero-section {
             position: relative; height: 100vh; display: flex;
             align-items: center; justify-content: center;
             text-align: center; overflow: hidden;
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1;
+            border-bottom: 1px solid var(--border-color); z-index: 1;
         }
 
         .bg-video, .bg-image {
@@ -91,18 +66,13 @@
             transform: translateX(-50%) translateY(-50%);
             z-index: -2; opacity: 0.8;
             filter: grayscale(80%) contrast(105%) brightness(85%);
-            object-fit: cover; transition: all 0.8s ease;
+            object-fit: cover;
         }
 
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 15, 15, 0.35); z-index: -1; transition: background 0.8s ease;
+            background: rgba(15, 15, 15, 0.4); z-index: -1;
         }
-
-        body.theme-midnight .overlay { background: rgba(0, 5, 15, 0.75); }
-        body.theme-midnight .bg-video, body.theme-midnight .bg-image { filter: grayscale(90%) contrast(120%) brightness(50%); }
-        body.theme-warm .overlay { background: rgba(30, 15, 0, 0.5); }
-        body.theme-warm .bg-video, body.theme-warm .bg-image { filter: sepia(40%) contrast(110%) brightness(75%); }
 
         .hero-content { z-index: 1; padding: 20px; }
         .hero-content h1 {
@@ -124,29 +94,28 @@
         }
         @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* --- ส่วนแสดงโพสต์แบบไร้กรอบ (Borderless & Clean) --- */
+        /* --- ส่วนแสดงโพสต์ชิดซ้าย --- */
         .content-section { max-width: 650px; margin: 0 auto; padding: 60px 20px; z-index: 1; position: relative; }
         .entry-card {
             background: transparent; border: none;
             padding: 20px 0; margin-bottom: 50px; position: relative;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: left;
         }
         .date {
             font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 10px;
             letter-spacing: 3px; text-transform: uppercase; font-family: 'Cinzel', serif;
         }
-        .entry-card p { color: #d0d0d0; font-size: 1.05rem; margin-bottom: 15px; text-align: justify; }
+        .entry-card p { color: #d0d0d0; font-size: 1.05rem; margin-bottom: 15px; text-align: left; }
         .post-image {
             width: 100%; border-radius: 6px; margin-bottom: 20px;
             object-fit: cover; border: 1px solid rgba(255,255,255,0.1); max-height: 450px;
         }
         .poem {
             font-family: 'Sarabun', serif; font-style: italic; color: #dfdfdf;
-            padding: 15px 0; margin: 10px 0; line-height: 2.3; text-align: center;
+            padding: 10px 0; margin: 10px 0; line-height: 2.3; text-align: left;
             white-space: pre-line; font-size: 1.15rem;
         }
-        .media-embed { margin-top: 20px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-        .media-embed iframe { width: 100%; border: none; display: block; }
         
         .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
         .post-tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -156,8 +125,7 @@
             letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* --- ปุ่มปฏิสัมพันธ์ (กอด & แชร์มินิมอล) --- */
-        .post-actions { display: flex; gap: 15px; align-items: center; }
+        .post-actions { display: flex; gap: 12px; align-items: center; }
         .action-btn {
             background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #aaa;
             padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer;
@@ -166,17 +134,16 @@
         }
         .action-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.3); }
 
-        /* ปุ่มลบ (ซ่อนเป็นค่าเริ่มต้น จะโชว์เฉพาะตอนล็อกอิน) */
         .delete-btn {
             display: none; background: none; border: none;
-            color: #ff6b6b; font-size: 0.8rem; cursor: pointer; transition: opacity 0.2s;
+            color: #ff6b6b; font-size: 0.8rem; cursor: pointer;
             margin-left: 10px;
         }
         body.logged-in .delete-btn { display: inline-block; }
 
         .blur-content {
             filter: blur(8px); opacity: 0.6; transition: filter 0.4s ease, opacity 0.4s ease;
-            cursor: pointer; user-select: none; position: relative;
+            cursor: pointer; position: relative; text-align: left;
         }
         .blur-content:hover, .blur-content:active { filter: blur(0); opacity: 1; }
         .blur-hint {
@@ -185,7 +152,7 @@
             font-size: 0.75rem; letter-spacing: 1px; pointer-events: none;
         }
 
-        /* --- ป๊อปอัพหลังบ้าน & แท็ก --- */
+        /* --- หลังบ้านแบ่ง 2 โซนชัดเจน --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
@@ -195,24 +162,21 @@
         .modal-content {
             background: #0d0d0d; border: 1px solid var(--border-color);
             padding: 30px 20px; width: 100%; max-width: 600px;
-            max-height: 90vh; overflow-y: auto; border-radius: 8px; position: relative;
+            max-height: 90vh; overflow-y: auto; border-radius: 8px; position: relative; text-align: left;
         }
-        @media(min-width: 768px) { .modal-content { padding: 40px; } }
-        .modal-content h2 { font-size: 1rem; margin-bottom: 5px; color: #fff; letter-spacing: 1px; }
-        .section-desc { font-size: 0.8rem; color: #666; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+        .modal-content h2 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; }
+        .section-desc { font-size: 0.8rem; color: #666; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .admin-zone { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 6px; margin-bottom: 25px; }
         .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; }
         .close-btn:hover { color: #fff; }
         
-        label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; margin-top: 15px; }
+        label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; margin-top: 12px; }
         input, textarea, select {
-            width: 100%; padding: 12px; background: #141414; border: 1px solid var(--border-color);
+            width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid var(--border-color);
             color: #fff; border-radius: 4px; margin-bottom: 5px; font-family: 'Sarabun', sans-serif; font-size: 0.9rem; outline: none;
         }
         input:focus, textarea:focus, select:focus { border-color: #555; }
         
-        .theme-selector { background: #141414; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #222; }
-        
-        /* ปุ่มแท็กสำเร็จรูปในหลังบ้าน */
         .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; margin-bottom: 15px; }
         .q-tag-chip {
             background: #1c1c1c; border: 1px solid #333; color: #aaa; padding: 4px 10px;
@@ -220,12 +184,12 @@
         }
         .q-tag-chip:hover { background: #333; color: #fff; border-color: #555; }
 
-        .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 15px 0 20px 0; cursor: pointer; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 15px 0 15px 0; cursor: pointer; }
         .checkbox-group input { width: auto; margin: 0; transform: scale(1.2); cursor: pointer; }
         .checkbox-group label { margin: 0; cursor: pointer; color: #ccc; text-transform: none; font-size: 0.85rem; }
         
         button.submit-btn {
-            background: #fff; color: #000; border: none; padding: 13px 25px; border-radius: 4px;
+            background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 4px;
             font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.8rem;
             letter-spacing: 2px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px;
             transition: background 0.2s;
@@ -234,106 +198,57 @@
         footer { text-align: center; padding: 50px 20px; color: #444; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; z-index: 1; position: relative; }
     </style>
 </head>
-<body class="theme-rain">
+<body oncontextmenu="return false;"> <!-- ป้องกันคลิกขวา -->
 
-    <!-- ละอองบรรยากาศพื้นหลัง -->
     <div class="ambient-particles" id="ambientParticles"></div>
 
-    <!-- ปุ่มรวมบรรยากาศ (Dropdown) -->
-    <div class="mood-dropdown">
-        <button class="glass-btn" onclick="toggleMoodMenu()">
-            🎧 ปรับบรรยากาศ
-        </button>
-        <div class="mood-menu" id="moodMenu">
-            <button class="menu-item active" id="btn-rain" onclick="setMode('rain')"><span>🌧️ ฤดูฝน</span></button>
-            <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')"><span>🌒 ราตรีสงัด</span></button>
-            <button class="menu-item" id="btn-warm" onclick="setMode('warm')"><span>🕯️ แสงเทียน</span></button>
-            <div class="menu-divider"></div>
-            <button class="menu-item" id="soundBtn" onclick="toggleSound()"><span>🔇 เปิดเพลงคลอ</span></button>
-        </div>
-    </div>
-
-    <!-- แทร็กเสียงเพลง -->
-    <audio id="musicAudio" loop preload="auto"></audio>
-
-    <!-- แบนเนอร์หลัก -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
-        <div id="heroBgContainer"></div>
+        <div id="heroBgContainer">
+            <img src="https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=1000&auto=format&fit=crop" class="bg-image" alt="Banner">
+        </div>
         <div class="hero-content">
-            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิก 3 ครั้งเพื่อเข้าหลังบ้าน">AHTAO SPACE</h1>
+            <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิกเพื่อเข้าหลังบ้าน">AHTAO SPACE</h1>
             <p id="brandSub">แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น</p>
         </div>
         <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
-    <!-- โพสต์ -->
     <main class="content-section" id="postsContainer">
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดความรู้สึก...</p>
     </main>
 
-    <!-- หลังบ้าน (Admin Modal) -->
+    <!-- หลังบ้านแบ่งเป็น 2 โซนชัดเจน -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeAdmin()">✕</button>
             
-            <div style="margin-bottom: 35px;">
-                <h2>1. ตั้งค่าบรรยากาศแต่ละโหมด</h2>
-                <div class="section-desc">ปรับแต่งภาพฉากหลัง ชื่อเรื่อง และเสียงเพลงประจำโหมด</div>
-                <div class="theme-selector">
-                    <label style="color: #fff; margin-top: 0;">เลือกโหมดที่ต้องการแก้ไข:</label>
-                    <select id="adminThemeSelect" onchange="loadAdminThemeFields()">
-                        <option value="rain">🌧️ โหมดฤดูฝน (Rain)</option>
-                        <option value="midnight">🌒 โหมดราตรีสงัด (Midnight)</option>
-                        <option value="warm">🕯️ โหมดแสงเทียน (Warmth)</option>
-                    </select>
-                </div>
-                
-                <label>ประเภทภาพฉากหลัง</label>
-                <select id="bannerType">
-                    <option value="image">รูปภาพ / GIF (รองรับลิงก์ Google Drive)</option>
-                    <option value="video">วิดีโอ (.mp4)</option>
-                </select>
+            <h2>หลังบ้าน AHTAO SPACE</h2>
+            <div class="section-desc">จัดการสเปซและความรู้สึกของคุณ</div>
 
-                <label>ลิงก์รูป/GIF หรือ วิดีโอ</label>
-                <input type="text" id="bannerUrl" placeholder="วางลิงก์ภาพหรือวิดีโอ...">
-
-                <label>ชื่อหลัก</label>
-                <input type="text" id="bannerTitleInput" placeholder="AHTAO SPACE">
-
-                <label>ข้อความรองใต้ชื่อ</label>
-                <input type="text" id="bannerSubInput" placeholder="ประโยคความรู้สึก...">
-
-                <label>ลิงก์เพลงคลอ (Music .mp3)</label>
-                <input type="text" id="musicUrl" placeholder="ลิงก์ไฟล์ดนตรี...">
-
-                <button class="submit-btn" onclick="saveThemeData()">บันทึกโหมดนี้</button>
+            <!-- โซนที่ 1: ตั้งค่าแบนเนอร์/บรรยากาศ -->
+            <div class="admin-zone">
+                <h3 style="font-size: 0.95rem; color: #fff; margin-bottom: 10px;">🌄 โซนที่ 1: ตั้งค่าภาพฉากหลัง</h3>
+                <label>ลิงก์รูปภาพฉากหลัง (รองรับ Google Drive)</label>
+                <input type="text" id="bannerUrlInput" placeholder="วางลิงก์รูปภาพ...">
+                <button class="submit-btn" style="background: #222; color: #fff; border: 1px solid #444;" onclick="saveBannerData()">อัปเดตภาพแบนเนอร์</button>
             </div>
 
-            <div>
-                <h2>2. สร้างความรู้สึกใหม่</h2>
-                <div class="section-desc">บันทึกข้อความ บทกวี หรือเสียงเพลงลงสเปซ</div>
-
-                <label>ประเภทเนื้อหา</label>
-                <select id="postType" onchange="handlePostTypeChange()">
-                    <option value="text">บันทึกทั่วไป</option>
-                    <option value="poem">บทกวี (จัดกึ่งกลาง ตัวเอียง)</option>
-                    <option value="music">เพลง (แสดงเครื่องเล่น Spotify)</option>
+            <!-- โซนที่ 2: สร้างโพสต์ความรู้สึกใหม่ -->
+            <div class="admin-zone">
+                <h3 style="font-size: 0.95rem; color: #fff; margin-bottom: 10px;">✍️ โซนที่ 2: สร้างความรู้สึกใหม่</h3>
+                
+                <label>รูปแบบข้อความ</label>
+                <select id="postType">
+                    <option value="text">บันทึกทั่วไป (ชิดซ้าย)</option>
+                    <option value="poem">บทกวี (ตัวเอียง ชิดซ้าย)</option>
                 </select>
-
-                <label>วันที่ (เว้นว่างไว้ ระบบจะใส่วันที่ปัจจุบันให้อัตโนมัติ)</label>
-                <input type="text" id="postDate" placeholder="อัตโนมัติ (หรือพิมพ์เอง)">
 
                 <label>รูปภาพประกอบโพสต์ (ถ้ามี)</label>
                 <input type="text" id="postImageUrl" placeholder="วางลิงก์รูปภาพ...">
 
-                <label>เนื้อหา / ความรู้สึก</label>
+                <label>เนื้อหา / ความรู้สึก *</label>
                 <textarea id="postContent" rows="4" placeholder="พิมพ์ความรู้สึกของคุณที่นี่..."></textarea>
-
-                <div id="spotifyBox" style="display: none;">
-                    <label>ลิงก์เพลง Spotify</label>
-                    <input type="text" id="postMediaUrl" placeholder="วางลิงก์เพลงจาก Spotify...">
-                </div>
 
                 <label>ป้ายกำกับ (แท็กอารมณ์)</label>
                 <input type="text" id="postTags" placeholder="เช่น #คิดถึง, #ฝนตก">
@@ -341,7 +256,6 @@
                     <span class="q-tag-chip" onclick="addTag('#คิดถึง')">#คิดถึง</span>
                     <span class="q-tag-chip" onclick="addTag('#ฝนตก')">#ฝนตก</span>
                     <span class="q-tag-chip" onclick="addTag('#ความเหงา')">#ความเหงา</span>
-                    <span class="q-tag-chip" onclick="addTag('#ช่วงเวลา')">#ช่วงเวลา</span>
                     <span class="q-tag-chip" onclick="addTag('#บันทึก')">#บันทึก</span>
                 </div>
 
@@ -373,58 +287,26 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const ADMIN_PASS = "1164";
+        const SITE_URL = "https://ahtaospace.pages.dev/";
 
-        const myPianoSong = "https://drive.google.com/file/d/1Bk46Ko5f43Wub1zOg9B3upaURXodWoWU/view?usp=sharing";
-
-        let themesData = {
-            rain: { title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น', type: 'image', url: '', music: myPianoSong },
-            midnight: { title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี', type: 'image', url: '', music: myPianoSong },
-            warm: { title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ', type: 'image', url: '', music: myPianoSong }
-        };
-
-        let currentMode = localStorage.getItem('ahtao_saved_mode') || 'rain'; 
-        let isAudioPlaying = false;
-        const ADMIN_PASS = "1164"; // รหัสผ่านหลังบ้าน
-
-        // ตรวจสอบสถานะการล็อกอินจาก SessionStorage (ปิดแท็บหายไป ต้องกรอกใหม่)
         if (sessionStorage.getItem('ahtao_admin_auth') === 'true') {
             document.body.classList.add('logged-in');
         }
 
-        function convertDriveLink(url, isMedia = false) {
+        function convertDriveLink(url) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
                 let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) { 
-                    if(!isMedia) return `https://lh3.googleusercontent.com/d/${match[1]}`; 
-                    else return `https://docs.google.com/uc?export=download&id=${match[1]}`; 
-                }
+                if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
             return url;
         }
 
-        // แปลงลิงก์ Spotify ปกติให้เป็น Embed อัตโนมัติ
-        function convertSpotifyLink(url) {
-            if (!url) return "";
-            if (url.includes("spotify.com") && !url.includes("/embed/")) {
-                return url.replace("spotify.com/", "spotify.com/embed/");
-            }
-            return url;
-        }
-
-        window.toggleMoodMenu = function() { document.getElementById("moodMenu").classList.toggle("show"); }
-        window.onclick = function(event) {
-            if (!event.target.closest('.mood-dropdown')) {
-                const dropdowns = document.getElementsByClassName("mood-menu");
-                for (let i = 0; i < dropdowns.length; i++) { dropdowns[i].classList.remove('show'); }
-            }
-        }
-
-        // สร้างละอองดาวเบาๆ ตามโหมด
         function initParticles() {
             const container = document.getElementById("ambientParticles");
             container.innerHTML = "";
-            for(let i=0; i<15; i++) {
+            for(let i=0; i<12; i++) {
                 let p = document.createElement("div");
                 p.className = "particle";
                 let size = Math.random() * 3 + 1;
@@ -437,182 +319,51 @@
             }
         }
 
-        async function fetchAllThemes() {
-            try {
-                const snapRain = await getDoc(doc(db, "settings", "theme_rain"));
-                if(snapRain.exists()) {
-                    let d = snapRain.data();
-                    if(d.title) themesData.rain.title = d.title;
-                    if(d.subtitle) themesData.rain.subtitle = d.subtitle;
-                    if(d.type) themesData.rain.type = d.type;
-                    if(d.url) themesData.rain.url = d.url;
-                    if(d.music && d.music.trim() !== '') themesData.rain.music = d.music;
-                }
-                
-                const snapMid = await getDoc(doc(db, "settings", "theme_midnight"));
-                if(snapMid.exists()) {
-                    let d = snapMid.data();
-                    if(d.title) themesData.midnight.title = d.title;
-                    if(d.subtitle) themesData.midnight.subtitle = d.subtitle;
-                    if(d.type) themesData.midnight.type = d.type;
-                    if(d.url) themesData.midnight.url = d.url;
-                    if(d.music && d.music.trim() !== '') themesData.midnight.music = d.music;
-                }
-                
-                const snapWarm = await getDoc(doc(db, "settings", "theme_warm"));
-                if(snapWarm.exists()) {
-                    let d = snapWarm.data();
-                    if(d.title) themesData.warm.title = d.title;
-                    if(d.subtitle) themesData.warm.subtitle = d.subtitle;
-                    if(d.type) themesData.warm.type = d.type;
-                    if(d.url) themesData.warm.url = d.url;
-                    if(d.music && d.music.trim() !== '') themesData.warm.music = d.music;
-                }
-            } catch (e) { console.log("โหลดตั้งค่าโหมดออฟไลน์"); }
-            
-            setMode(currentMode); 
-        }
-
-        function renderBg(type, url) {
-            const container = document.getElementById("heroBgContainer");
-            if (!url) { container.innerHTML = ''; return; }
-            if (type === "image") {
-                container.innerHTML = `<img src="${url}" class="bg-image" alt="Banner">`;
-            } else {
-                container.innerHTML = `<video autoplay loop muted playsinline class="bg-video"><source src="${url}" type="video/mp4"></video>`;
-            }
-        }
-
-        window.setMode = function(mode) {
-            currentMode = mode;
-            localStorage.setItem('ahtao_saved_mode', mode);
-
-            document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
-            let activeBtn = document.getElementById('btn-' + mode);
-            if(activeBtn) activeBtn.classList.add('active');
-            
-            document.getElementById("moodMenu").classList.remove("show");
-            document.body.className = `theme-${mode}`;
-            if (document.body.classList.contains('logged-in')) document.body.classList.add('logged-in');
-
-            const data = themesData[mode];
-            document.getElementById("brandTitle").innerText = data.title || 'AHTAO SPACE';
-            document.getElementById("brandSub").innerText = data.subtitle || '';
-            
-            let finalBgUrl = data.type === "image" ? convertDriveLink(data.rawUrl || data.url) : (data.rawUrl || data.url);
-            renderBg(data.type, finalBgUrl);
-
-            const music = document.getElementById("musicAudio");
-            let currentMusic = convertDriveLink(data.music, true);
-            
-            if(music.src !== currentMusic) music.src = currentMusic;
-            music.volume = 0.6;
-
-            if (isAudioPlaying) { 
-                if (music.src && music.src !== window.location.href) music.play().catch(e => console.log("Music Play Error"));
-            }
-        }
-
-        window.toggleSound = function() {
-            const music = document.getElementById("musicAudio");
-            const btn = document.getElementById("soundBtn");
-            
-            if (isAudioPlaying) {
-                music.pause();
-                btn.innerHTML = "<span>🔊 เปิดเพลงคลอ</span>";
-                isAudioPlaying = false;
-            } else {
-                if (music.src && music.src !== window.location.href) music.play().catch(e => console.log("Music Error"));
-                btn.innerHTML = "<span>🔇 ปิดเพลงคลอ</span>";
-                isAudioPlaying = true;
-            }
-        }
-
-        // --- ระบบหลังบ้าน & รหัสผ่าน (จำสถานะ ไม่ต้องกรอกซ้ำ) ---
-        let clickCount = 0; let clickTimer = null;
+        // คลิก 1 ครั้ง เปิดหลังบ้าน
         window.handleTitleClick = function() {
-            clickCount++;
-            if (clickCount === 1) {
-                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-            } else if (clickCount === 3) {
-                clearTimeout(clickTimer); clickCount = 0;
-                
-                // เช็คว่าเคยกรอกรหัสผ่านในรอบนี้หรือยัง
-                if (sessionStorage.getItem('ahtao_admin_auth') === 'true') {
-                    openAdminModal();
-                } else {
-                    let pass = prompt("🔐 กรุณากรอกรหัสผ่านเพื่อเข้าสู่หลังบ้าน:");
-                    if (pass === ADMIN_PASS) {
-                        sessionStorage.setItem('ahtao_admin_auth', 'true');
-                        document.body.classList.add('logged-in');
-                        openAdminModal();
-                    } else if (pass !== null) {
-                        alert("❌ รหัสผ่านไม่ถูกต้อง");
-                    }
+            if (sessionStorage.getItem('ahtao_admin_auth') === 'true') {
+                document.getElementById("adminModal").style.display = "flex";
+            } else {
+                let pass = prompt("🔐 กรุณากรอกรหัสผ่านเพื่อเข้าสู่หลังบ้าน:");
+                if (pass === ADMIN_PASS) {
+                    sessionStorage.setItem('ahtao_admin_auth', 'true');
+                    document.body.classList.add('logged-in');
+                    document.getElementById("adminModal").style.display = "flex";
+                } else if (pass !== null) {
+                    alert("❌ รหัสผ่านไม่ถูกต้อง");
                 }
             }
-        }
-
-        function openAdminModal() {
-            document.getElementById("adminThemeSelect").value = currentMode;
-            window.loadAdminThemeFields();
-            
-            // ดึงวันที่ปัจจุบันมาใส่ช่องวันที่ให้อัตโนมัติ
-            const today = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById("postDate").placeholder = today.toLocaleDateString('th-TH', options);
-
-            document.getElementById("adminModal").style.display = "flex";
         }
 
         window.closeAdmin = function() { document.getElementById("adminModal").style.display = "none"; }
 
-        window.loadAdminThemeFields = function() {
-            const selected = document.getElementById("adminThemeSelect").value;
-            const data = themesData[selected];
-            
-            document.getElementById("bannerType").value = data.type || 'image';
-            document.getElementById("bannerUrl").value = data.rawUrl || data.url || '';
-            document.getElementById("bannerTitleInput").value = data.title || '';
-            document.getElementById("bannerSubInput").value = data.subtitle || '';
-            document.getElementById("musicUrl").value = data.music || '';
-        }
-
-        window.saveThemeData = async function() {
-            const theme = document.getElementById("adminThemeSelect").value;
-            const type = document.getElementById("bannerType").value;
-            let rawUrl = document.getElementById("bannerUrl").value;
-            const title = document.getElementById("bannerTitleInput").value;
-            const subtitle = document.getElementById("bannerSubInput").value;
-            const music = document.getElementById("musicUrl").value;
-            
-            let url = type === "image" ? convertDriveLink(rawUrl) : rawUrl;
-
-            try {
-                await setDoc(doc(db, "settings", "theme_" + theme), { type, url, rawUrl, title, subtitle, music });
-                alert("บันทึกบรรยากาศสำเร็จ!");
-                location.reload();
-            } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
-        }
-
-        // จัดการฟอร์ม Smart (ซ่อนช่องเพลงถ้าไม่ใช้)
-        window.handlePostTypeChange = function() {
-            const type = document.getElementById("postType").value;
-            const spotifyBox = document.getElementById("spotifyBox");
-            if (type === 'music') {
-                spotifyBox.style.display = 'block';
-            } else {
-                spotifyBox.style.display = 'none';
-            }
-        }
-
         window.addTag = function(tag) {
             const input = document.getElementById("postTags");
-            if(input.value) {
-                input.value += ", " + tag;
-            } else {
-                input.value = tag;
-            }
+            input.value = input.value ? input.value + ", " + tag : tag;
+        }
+
+        // โหลดแบนเนอร์
+        async function fetchBanner() {
+            try {
+                const snap = await getDoc(doc(db, "settings", "banner"));
+                if(snap.exists()) {
+                    let d = snap.data();
+                    if(d.url) {
+                        document.querySelector(".bg-image").src = convertDriveLink(d.url);
+                        document.getElementById("bannerUrlInput").value = d.rawUrl || d.url;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        window.saveBannerData = async function() {
+            let rawUrl = document.getElementById("bannerUrlInput").value.trim();
+            let url = convertDriveLink(rawUrl);
+            try {
+                await setDoc(doc(db, "settings", "banner"), { url, rawUrl });
+                alert("อัปเดตภาพแบนเนอร์สำเร็จ!");
+                location.reload();
+            } catch(e) { alert("เกิดข้อผิดพลาด: " + e.message); }
         }
 
         async function loadPosts() {
@@ -628,20 +379,21 @@
                 querySnapshot.forEach((docSnap) => { postsArray.push({ id: docSnap.id, ...docSnap.data() }); });
                 postsArray.reverse();
 
+                // รายการวันที่สุ่มสำหรับโพสต์เก่าๆ (18/09 - 21/09)
+                const randomDates = [
+                    "18 กันยายน 2026",
+                    "19 กันยายน 2026",
+                    "20 กันยายน 2026",
+                    "21 กันยายน 2026"
+                ];
+
                 container.innerHTML = "";
-                postsArray.forEach((post) => {
+                postsArray.forEach((post, index) => {
                     let textHtml = "";
-                    if (post.type === 'text') {
+                    if (post.type === 'poem') {
+                        textHtml = `<div class="poem">${post.content ? post.content.replace(/\n/g, '<br>') : ''}</div>`;
+                    } else {
                         textHtml = `<p>${post.content ? post.content.replace(/\n/g, '<br>') : ''}</p>`;
-                    } else if (post.type === 'poem') {
-                        textHtml = `<div class="poem">${post.content || ''}</div>`;
-                    } else if (post.type === 'music') {
-                        textHtml = `
-                            <p>${post.content || ''}</p>
-                            <div class="media-embed">
-                                <iframe src="${convertSpotifyLink(post.mediaUrl)}" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                            </div>
-                        `;
                     }
 
                     let imgHtml = post.imageUrl ? `<img src="${convertDriveLink(post.imageUrl)}" class="post-image" alt="Memory" loading="lazy">` : '';
@@ -656,16 +408,18 @@
                         : `${imgHtml}${textHtml}`;
 
                     let hugsCount = post.hugs || 0;
+                    // ถ้าโพสต์ไม่มีวันที่ ให้สุ่มใส่วันที่ช่วง 18/09 - 21/09
+                    let displayDate = post.date || randomDates[index % randomDates.length];
 
                     container.innerHTML += `
                         <article class="entry-card">
-                            ${post.date ? `<span class="date">${post.date}</span>` : ''}
+                            <span class="date">${displayDate}</span>
                             ${contentWrapper}
                             <div class="post-footer">
                                 ${tagsHtml}
                                 <div class="post-actions">
                                     <button class="action-btn" onclick="sendHug('${post.id}')" title="ส่งกอด">🤍 <span id="hug-count-${post.id}">${hugsCount}</span></button>
-                                    <button class="action-btn" onclick="sharePost(this)" title="แชร์ความรู้สึก">📤 แชร์</button>
+                                    <button class="action-btn" onclick="shareAsCard(this)" title="แชร์เป็นการ์ดรูปภาพ">📤 แชร์</button>
                                     <button class="delete-btn" onclick="deletePost('${post.id}')" title="ลบโพสต์">✕ ลบ</button>
                                 </div>
                             </div>
@@ -675,52 +429,107 @@
             } catch (e) { container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">ไม่สามารถโหลดข้อมูลได้...</p>`; }
         }
 
-        // ระบบกดส่งกอด (Increment Hugs)
         window.sendHug = async function(id) {
             try {
                 const postRef = doc(db, "posts", id);
                 await updateDoc(postRef, { hugs: increment(1) });
                 const countSpan = document.getElementById(`hug-count-${id}`);
-                if(countSpan) {
-                    countSpan.innerText = parseInt(countSpan.innerText || 0) + 1;
-                }
-            } catch(e) { console.log("Hug error"); }
+                if(countSpan) countSpan.innerText = parseInt(countSpan.innerText || 0) + 1;
+            } catch(e) {}
         }
 
-        // ระบบแชร์ความรู้สึก (กวีข้างบน ลิงก์เว็บเล็กๆ ข้างล่าง)
-        window.sharePost = function(btn) {
+        // ระบบแชร์: สร้างเป็นการ์ดรูปภาพพร้อมฝังเครดิตและลิงก์เว็บถาวร (ลบไม่ออก)
+        window.shareAsCard = function(btn) {
             const card = btn.closest('.entry-card');
             const textEl = card.querySelector('p, .poem');
-            let textToShare = textEl ? textEl.innerText : "AHTAO SPACE";
-            
-            const siteUrl = window.location.href.split('?')[0];
-            const finalShareText = `${textToShare}\n\n— AHTAO SPACE\n${siteUrl}`;
+            const poemText = textEl ? textEl.innerText : "";
 
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(finalShareText).then(() => {
-                    alert("📋 คัดลอกข้อความพร้อมลิงก์เว็บเรียบร้อยแล้ว!\nสามารถนำไปวางใน IG Story หรือที่อื่นๆ ได้เลยค่ะ");
-                });
-            } else {
-                let t = document.createElement('textarea');
-                t.value = finalShareText;
-                document.body.appendChild(t);
-                t.select();
-                document.execCommand('copy');
-                document.body.removeChild(t);
-                alert("📋 คัดลอกข้อความพร้อมลิงก์เว็บเรียบร้อยแล้วค่ะ!");
+            // สร้าง Canvas วาดภาพการ์ดบทกวี
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1080; // สัดส่วนสี่เหลี่ยมจัตุรัส เหมาะกับ IG Story / Facebook
+            const ctx = canvas.getContext('2d');
+
+            // พื้นหลังดาร์กมินิมอล
+            ctx.fillStyle = "#0c0c0c";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // ขอบกรอบการ์ดบางๆ
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+            // วาดข้อความบทกวีตรงกลาง
+            ctx.fillStyle = "#e1e1e1";
+            ctx.font = "italic 42px 'Sarabun', sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            // ฟังก์ชันตัดคำขึ้นบรรทัดใหม่ใน Canvas
+            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+                let paragraphs = text.split('\n');
+                let lines = [];
+                for (let p of paragraphs) {
+                    let words = p.split(' ');
+                    let line = '';
+                    for (let n = 0; n < words.length; n++) {
+                        let testLine = line + words[n] + ' ';
+                        let metrics = context.measureText(testLine);
+                        let testWidth = metrics.width;
+                        if (testWidth > maxWidth && n > 0) {
+                            lines.push(line);
+                            line = words[n] + ' ';
+                        } else {
+                            line = testLine;
+                        }
+                    }
+                    lines.push(line);
+                }
+                let startY = y - (lines.length * lineHeight) / 2;
+                for (let k = 0; k < lines.length; k++) {
+                    context.fillText(lines[k], x, startY + (k * lineHeight));
+                }
             }
+
+            wrapText(ctx, poemText, canvas.width / 2, canvas.height / 2 - 40, 850, 75);
+
+            // วาดเครดิตและลิงก์เว็บด้านล่างสุด (ฝังติดไปกับภาพ ลบออกไม่ได้)
+            ctx.fillStyle = "#888888";
+            ctx.font = "300 24px 'Sarabun', sans-serif";
+            ctx.fillText("✦ AHTAO SPACE", canvas.width / 2, canvas.height - 140);
+
+            ctx.fillStyle = "#555555";
+            ctx.font = "20px 'Cinzel', serif";
+            ctx.fillText(SITE_URL, canvas.width / 2, canvas.height - 100);
+
+            // แปลง Canvas เป็นไฟล์รูปภาพแล้วดาวน์โหลด/แชร์อัตโนมัติ
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], "Ahtao-Space-Poem.png", { type: "image/png" });
+                
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: 'AHTAO SPACE',
+                            text: 'ความรู้สึกจาก AHTAO SPACE'
+                        });
+                        return;
+                    } catch (err) { console.log("Share cancelled"); }
+                }
+
+                // ถ้ามือถือ/เบราว์เซอร์ไม่รองรับการแชร์ไฟล์โดยตรง จะทำการดาวน์โหลดภาพลงเครื่องทันที
+                const link = document.createElement('a');
+                link.download = 'ahtao-space-card.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                alert("📥 สร้างการ์ดรูปภาพบทกวีพร้อมเครดิตเว็บเรียบร้อยแล้ว!\nสามารถนำรูปไปโพสต์ลง IG Story ได้เลยค่ะ");
+            }, 'image/png');
         }
 
         window.createPost = async function() {
             const type = document.getElementById("postType").value;
-            let date = document.getElementById("postDate").value.trim();
-            if (!date) {
-                const today = new Date();
-                date = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-            }
             const imageUrl = document.getElementById("postImageUrl").value.trim();
             const content = document.getElementById("postContent").value.trim();
-            const mediaUrl = document.getElementById("postMediaUrl").value.trim();
             const tags = document.getElementById("postTags").value.trim();
             const isBlurred = document.getElementById("postBlur").checked;
 
@@ -729,9 +538,13 @@
                 return;
             }
 
+            // วันที่ปัจจุบัน
+            const today = new Date();
+            const date = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+
             try {
                 await addDoc(collection(db, "posts"), {
-                    type, date, imageUrl, content, mediaUrl, tags, isBlurred,
+                    type, date, imageUrl, content, tags, isBlurred,
                     hugs: 0,
                     createdAt: new Date()
                 });
@@ -740,15 +553,8 @@
             } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
         }
 
-        window.deletePost = async function(id) {
-            if (confirm("ลบความรู้สึกนี้ทิ้งใช่หรือไม่?")) {
-                try { await deleteDoc(doc(db, "posts", id)); location.reload(); }
-                catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
-            }
-        }
-
         initParticles();
-        fetchAllThemes();
+        fetchBanner();
         loadPosts();
     </script>
 </body>
