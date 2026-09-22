@@ -12,27 +12,18 @@
             --text-muted: #888888; --accent: #ffffff;
         }
 
-        /* ล็อกการคลุมดำและคัดลอกข้อความบนหน้าเว็บทั้งหมด */
+        /* ล็อกการคลุมดำและคัดลอกข้อความบนหน้าเว็บ */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none;    /* Firefox */
-            -ms-user-select: none;     /* IE10+/Edge */
-            user-select: none;         /* Standard */
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
         }
-
-        /* ยกเว้นให้พิมพ์ในช่องกรอกหลังบ้านได้ปกติ */
-        input, textarea, select {
-            -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
-        }
+        input, textarea, select { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
 
         body {
             background-color: var(--bg-color); color: var(--text-main);
             font-family: 'Sarabun', sans-serif; line-height: 1.9;
             overflow-x: hidden; letter-spacing: 0.3px; position: relative;
+            transition: background-color 0.8s ease;
         }
 
         h1, h2, h3 { font-family: 'Prompt', sans-serif; font-weight: 300; color: var(--accent); }
@@ -52,6 +43,34 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
+        /* --- เมนูด้านบนขวา (3 โหมด + ปุ่มสุ่มความทรงจำ) --- */
+        .top-controls { position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; gap: 10px; align-items: center; }
+        .glass-btn {
+            background: rgba(15, 15, 15, 0.5); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ccc; padding: 10px 16px; border-radius: 30px;
+            font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(10px); transition: all 0.3s ease;
+            font-family: 'Sarabun', sans-serif; letter-spacing: 1px;
+        }
+        .glass-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+        .mood-menu {
+            display: none; position: absolute; top: 120%; right: 0;
+            background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; padding: 8px; backdrop-filter: blur(15px);
+            width: max-content; min-width: 160px;
+            flex-direction: column; gap: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 1000;
+        }
+        .mood-menu.show { display: flex; }
+        .menu-item {
+            background: transparent; border: none; color: #aaa; padding: 10px 14px;
+            text-align: left; font-family: 'Sarabun', sans-serif; font-size: 0.85rem;
+            cursor: pointer; border-radius: 8px; transition: all 0.2s;
+        }
+        .menu-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .menu-item.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
+
         /* --- แบนเนอร์ฉากหลัง --- */
         .hero-section {
             position: relative; height: 100vh; display: flex;
@@ -59,20 +78,22 @@
             text-align: center; overflow: hidden;
             border-bottom: 1px solid var(--border-color); z-index: 1;
         }
-
-        .bg-video, .bg-image {
+        .bg-image {
             position: absolute; top: 50%; left: 50%;
             min-width: 100%; min-height: 100%;
             transform: translateX(-50%) translateY(-50%);
             z-index: -2; opacity: 0.8;
             filter: grayscale(80%) contrast(105%) brightness(85%);
-            object-fit: cover;
+            object-fit: cover; transition: filter 0.8s ease;
         }
-
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 15, 15, 0.4); z-index: -1;
+            background: rgba(15, 15, 15, 0.35); z-index: -1; transition: background 0.8s ease;
         }
+        body.theme-midnight .overlay { background: rgba(0, 5, 15, 0.75); }
+        body.theme-midnight .bg-image { filter: grayscale(90%) contrast(120%) brightness(50%); }
+        body.theme-warm .overlay { background: rgba(30, 15, 0, 0.5); }
+        body.theme-warm .bg-image { filter: sepia(40%) contrast(110%) brightness(75%); }
 
         .hero-content { z-index: 1; padding: 20px; }
         .hero-content h1 {
@@ -94,30 +115,30 @@
         }
         @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* --- ส่วนแสดงโพสต์ชิดซ้าย --- */
+        /* --- ส่วนแสดงโพสต์ (ระยะห่างพอดีๆ อ่านสบายตา) --- */
         .content-section { max-width: 650px; margin: 0 auto; padding: 60px 20px; z-index: 1; position: relative; }
         .entry-card {
             background: transparent; border: none;
-            padding: 20px 0; margin-bottom: 50px; position: relative;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 10px 0; margin-bottom: 35px; position: relative; /* ระยะห่างพอดีๆ ไม่ห่างเกินไป */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             text-align: left;
         }
         .date {
-            font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 10px;
+            font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 8px;
             letter-spacing: 3px; text-transform: uppercase; font-family: 'Cinzel', serif;
         }
         .entry-card p { color: #d0d0d0; font-size: 1.05rem; margin-bottom: 15px; text-align: left; }
         .post-image {
-            width: 100%; border-radius: 6px; margin-bottom: 20px;
+            width: 100%; border-radius: 6px; margin-bottom: 15px;
             object-fit: cover; border: 1px solid rgba(255,255,255,0.1); max-height: 450px;
         }
         .poem {
             font-family: 'Sarabun', serif; font-style: italic; color: #dfdfdf;
-            padding: 10px 0; margin: 10px 0; line-height: 2.3; text-align: left;
+            padding: 8px 0; margin: 8px 0; line-height: 2.2; text-align: left;
             white-space: pre-line; font-size: 1.15rem;
         }
         
-        .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
         .post-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .post-tag {
             background: rgba(255,255,255,0.05); color: #999;
@@ -125,7 +146,7 @@
             letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.08);
         }
 
-        .post-actions { display: flex; gap: 12px; align-items: center; }
+        .post-actions { display: flex; gap: 10px; align-items: center; }
         .action-btn {
             background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #aaa;
             padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer;
@@ -135,9 +156,7 @@
         .action-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.3); }
 
         .delete-btn {
-            display: none; background: none; border: none;
-            color: #ff6b6b; font-size: 0.8rem; cursor: pointer;
-            margin-left: 10px;
+            display: none; background: none; border: none; color: #ff6b6b; font-size: 0.8rem; cursor: pointer; margin-left: 8px;
         }
         body.logged-in .delete-btn { display: inline-block; }
 
@@ -152,7 +171,7 @@
             font-size: 0.75rem; letter-spacing: 1px; pointer-events: none;
         }
 
-        /* --- หลังบ้านแบ่ง 2 โซนชัดเจน --- */
+        /* --- หลังบ้านแบ่ง 2 ฝั่ง ซ้าย-ขวา (Side-by-Side) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
@@ -161,52 +180,70 @@
         }
         .modal-content {
             background: #0d0d0d; border: 1px solid var(--border-color);
-            padding: 30px 20px; width: 100%; max-width: 600px;
+            padding: 30px; width: 100%; max-width: 900px;
             max-height: 90vh; overflow-y: auto; border-radius: 8px; position: relative; text-align: left;
         }
-        .modal-content h2 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; }
-        .section-desc { font-size: 0.8rem; color: #666; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .admin-zone { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 6px; margin-bottom: 25px; }
-        .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .modal-header h2 { font-size: 1.1rem; color: #fff; }
+        .close-btn { background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; }
         .close-btn:hover { color: #fff; }
+
+        /* เลย์เอาต์ 2 ฝั่ง ซ้าย-ขวา */
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
         
-        label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; margin-top: 12px; }
+        .admin-pane { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 6px; }
+        .admin-pane h3 { font-size: 0.95rem; color: #fff; margin-bottom: 12px; }
+
+        label { display: block; margin-bottom: 5px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; margin-top: 10px; }
         input, textarea, select {
-            width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid var(--border-color);
-            color: #fff; border-radius: 4px; margin-bottom: 5px; font-family: 'Sarabun', sans-serif; font-size: 0.9rem; outline: none;
+            width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid var(--border-color);
+            color: #fff; border-radius: 4px; margin-bottom: 5px; font-family: 'Sarabun', sans-serif; font-size: 0.85rem; outline: none;
         }
         input:focus, textarea:focus, select:focus { border-color: #555; }
         
-        .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; margin-bottom: 15px; }
+        .quick-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; margin-bottom: 10px; }
         .q-tag-chip {
-            background: #1c1c1c; border: 1px solid #333; color: #aaa; padding: 4px 10px;
-            border-radius: 15px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+            background: #1c1c1c; border: 1px solid #333; color: #aaa; padding: 3px 8px;
+            border-radius: 15px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s;
         }
         .q-tag-chip:hover { background: #333; color: #fff; border-color: #555; }
 
-        .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 15px 0 15px 0; cursor: pointer; }
-        .checkbox-group input { width: auto; margin: 0; transform: scale(1.2); cursor: pointer; }
-        .checkbox-group label { margin: 0; cursor: pointer; color: #ccc; text-transform: none; font-size: 0.85rem; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 12px 0; cursor: pointer; }
+        .checkbox-group input { width: auto; margin: 0; transform: scale(1.1); cursor: pointer; }
+        .checkbox-group label { margin: 0; cursor: pointer; color: #ccc; text-transform: none; font-size: 0.8rem; }
         
         button.submit-btn {
-            background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 4px;
-            font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.8rem;
+            background: #fff; color: #000; border: none; padding: 11px 20px; border-radius: 4px;
+            font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.75rem;
             letter-spacing: 2px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px;
             transition: background 0.2s;
         }
         button.submit-btn:hover { background: #d0d0d0; }
-        footer { text-align: center; padding: 50px 20px; color: #444; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; z-index: 1; position: relative; }
+        footer { text-align: center; padding: 40px 20px; color: #444; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; z-index: 1; position: relative; }
     </style>
 </head>
-<body oncontextmenu="return false;"> <!-- ป้องกันคลิกขวา -->
+<body class="theme-rain" oncontextmenu="return false;">
 
     <div class="ambient-particles" id="ambientParticles"></div>
 
+    <!-- เมนูด้านบนขวา (3 โหมด + ปุ่มสุ่มความทรงจำ) -->
+    <div class="top-controls">
+        <button class="glass-btn" onclick="randomMemory()" title="สุ่มอ่านความรู้สึกในอดีต">🌠 สุ่มความทรงจำ</button>
+        <div style="position: relative;">
+            <button class="glass-btn" onclick="toggleMoodMenu()">🎧 บรรยากาศ</button>
+            <div class="mood-menu" id="moodMenu">
+                <button class="menu-item active" id="btn-rain" onclick="setMode('rain')">🌧️ ฤดูฝน</button>
+                <button class="menu-item" id="btn-midnight" onclick="setMode('midnight')">🌒 ราตรีสงัด</button>
+                <button class="menu-item" id="btn-warm" onclick="setMode('warm')">🕯️ แสงเทียน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- แบนเนอร์ฉากหลัง -->
     <header class="hero-section" id="heroBanner">
         <div class="overlay"></div>
-        <div id="heroBgContainer">
-            <img src="https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=1000&auto=format&fit=crop" class="bg-image" alt="Banner">
-        </div>
+        <img src="" class="bg-image" id="bgImageElement" alt="Banner">
         <div class="hero-content">
             <h1 id="brandTitle" onclick="handleTitleClick()" title="คลิกเพื่อเข้าหลังบ้าน">AHTAO SPACE</h1>
             <p id="brandSub">แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น</p>
@@ -214,57 +251,69 @@
         <div class="scroll-indicator">เลื่อนลงเพื่ออ่าน</div>
     </header>
 
+    <!-- ส่วนแสดงโพสต์ -->
     <main class="content-section" id="postsContainer">
         <p style="text-align: center; color: var(--text-muted); font-style: italic;">กำลังโหลดความรู้สึก...</p>
     </main>
 
-    <!-- หลังบ้านแบ่งเป็น 2 โซนชัดเจน -->
+    <!-- หลังบ้านแบ่ง 2 ฝั่ง ซ้าย-ขวา -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeAdmin()">✕</button>
-            
-            <h2>หลังบ้าน AHTAO SPACE</h2>
-            <div class="section-desc">จัดการสเปซและความรู้สึกของคุณ</div>
-
-            <!-- โซนที่ 1: ตั้งค่าแบนเนอร์/บรรยากาศ -->
-            <div class="admin-zone">
-                <h3 style="font-size: 0.95rem; color: #fff; margin-bottom: 10px;">🌄 โซนที่ 1: ตั้งค่าภาพฉากหลัง</h3>
-                <label>ลิงก์รูปภาพฉากหลัง (รองรับ Google Drive)</label>
-                <input type="text" id="bannerUrlInput" placeholder="วางลิงก์รูปภาพ...">
-                <button class="submit-btn" style="background: #222; color: #fff; border: 1px solid #444;" onclick="saveBannerData()">อัปเดตภาพแบนเนอร์</button>
+            <div class="modal-header">
+                <h2>หลังบ้าน AHTAO SPACE</h2>
+                <button class="close-btn" onclick="closeAdmin()">✕</button>
             </div>
 
-            <!-- โซนที่ 2: สร้างโพสต์ความรู้สึกใหม่ -->
-            <div class="admin-zone">
-                <h3 style="font-size: 0.95rem; color: #fff; margin-bottom: 10px;">✍️ โซนที่ 2: สร้างความรู้สึกใหม่</h3>
-                
-                <label>รูปแบบข้อความ</label>
-                <select id="postType">
-                    <option value="text">บันทึกทั่วไป (ชิดซ้าย)</option>
-                    <option value="poem">บทกวี (ตัวเอียง ชิดซ้าย)</option>
-                </select>
+            <div class="admin-grid">
+                <!-- ฝั่งซ้าย: ตั้งค่าแบนเนอร์แยกตามโหมด -->
+                <div class="admin-pane">
+                    <h3>🌄 ฝั่งซ้าย: ตั้งค่าหน้าเว็บ (แบนเนอร์)</h3>
+                    
+                    <label>เลือกโหมดที่ต้องการแก้ไขภาพฉากหลัง</label>
+                    <select id="adminThemeSelect" onchange="loadAdminThemeFields()">
+                        <option value="rain">🌧️ โหมดฤดูฝน (Rain)</option>
+                        <option value="midnight">🌒 โหมดราตรีสงัด (Midnight)</option>
+                        <option value="warm">🕯️ โหมดแสงเทียน (Warm)</option>
+                    </select>
 
-                <label>รูปภาพประกอบโพสต์ (ถ้ามี)</label>
-                <input type="text" id="postImageUrl" placeholder="วางลิงก์รูปภาพ...">
+                    <label>ลิงก์รูปภาพฉากหลัง (Google Drive / ลิงก์ตรง)</label>
+                    <input type="text" id="bannerUrlInput" placeholder="วางลิงก์รูปภาพ...">
 
-                <label>เนื้อหา / ความรู้สึก *</label>
-                <textarea id="postContent" rows="4" placeholder="พิมพ์ความรู้สึกของคุณที่นี่..."></textarea>
-
-                <label>ป้ายกำกับ (แท็กอารมณ์)</label>
-                <input type="text" id="postTags" placeholder="เช่น #คิดถึง, #ฝนตก">
-                <div class="quick-tags">
-                    <span class="q-tag-chip" onclick="addTag('#คิดถึง')">#คิดถึง</span>
-                    <span class="q-tag-chip" onclick="addTag('#ฝนตก')">#ฝนตก</span>
-                    <span class="q-tag-chip" onclick="addTag('#ความเหงา')">#ความเหงา</span>
-                    <span class="q-tag-chip" onclick="addTag('#บันทึก')">#บันทึก</span>
+                    <button class="submit-btn" style="background: #222; color: #fff; border: 1px solid #444;" onclick="saveBannerData()">อัปเดตแบนเนอร์โหมดนี้</button>
                 </div>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="postBlur">
-                    <label for="postBlur">ซ่อนความรู้สึกนี้ (ทำให้เบลอ)</label>
-                </div>
+                <!-- ฝั่งขวา: โพสต์ความรู้สึกใหม่ -->
+                <div class="admin-pane">
+                    <h3>✍️ ฝั่งขวา: สร้างความรู้สึกใหม่</h3>
 
-                <button class="submit-btn" onclick="createPost()">บันทึกความรู้สึก</button>
+                    <label>รูปแบบข้อความ</label>
+                    <select id="postType">
+                        <option value="text">บันทึกทั่วไป (ชิดซ้าย)</option>
+                        <option value="poem">บทกวี (ตัวเอียง ชิดซ้าย)</option>
+                    </select>
+
+                    <label>รูปภาพประกอบโพสต์ (ถ้ามี)</label>
+                    <input type="text" id="postImageUrl" placeholder="วางลิงก์รูปภาพ...">
+
+                    <label>เนื้อหา / ความรู้สึก *</label>
+                    <textarea id="postContent" rows="3" placeholder="พิมพ์ความรู้สึกของคุณที่นี่..."></textarea>
+
+                    <label>ป้ายกำกับ (แท็กอารมณ์)</label>
+                    <input type="text" id="postTags" placeholder="เช่น #คิดถึง, #ฝนตก">
+                    <div class="quick-tags">
+                        <span class="q-tag-chip" onclick="addTag('#คิดถึง')">#คิดถึง</span>
+                        <span class="q-tag-chip" onclick="addTag('#ฝนตก')">#ฝนตก</span>
+                        <span class="q-tag-chip" onclick="addTag('#ความเหงา')">#ความเหงา</span>
+                        <span class="q-tag-chip" onclick="addTag('#บันทึก')">#บันทึก</span>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="postBlur">
+                        <label for="postBlur">ซ่อนความรู้สึกนี้ (ทำให้เบลอ)</label>
+                    </div>
+
+                    <button class="submit-btn" onclick="createPost()">บันทึกความรู้สึก</button>
+                </div>
             </div>
         </div>
     </div>
@@ -289,6 +338,13 @@
         const db = getFirestore(app);
         const ADMIN_PASS = "1164";
         const SITE_URL = "https://ahtaospace.pages.dev/";
+
+        let currentMode = localStorage.getItem('ahtao_saved_mode') || 'rain';
+        let themesData = {
+            rain: { title: 'AHTAO SPACE', subtitle: 'แค่เพียงเต้าหู้ที่ถูกกัดกิน เพียงเท่านั้น', url: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=1000&auto=format&fit=crop' },
+            midnight: { title: 'AHTAO SPACE', subtitle: 'ความว่างเปล่าในราตรี', url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1000&auto=format&fit=crop' },
+            warm: { title: 'AHTAO SPACE', subtitle: 'ความอบอุ่นในความเงียบ', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1000&auto=format&fit=crop' }
+        };
 
         if (sessionStorage.getItem('ahtao_admin_auth') === 'true') {
             document.body.classList.add('logged-in');
@@ -319,16 +375,56 @@
             }
         }
 
-        // คลิก 1 ครั้ง เปิดหลังบ้าน
+        window.toggleMoodMenu = function() { document.getElementById("moodMenu").classList.toggle("show"); }
+        window.onclick = function(event) {
+            if (!event.target.closest('.top-controls')) {
+                document.getElementById("moodMenu").classList.remove('show');
+            }
+        }
+
+        window.setMode = function(mode) {
+            currentMode = mode;
+            localStorage.setItem('ahtao_saved_mode', mode);
+
+            document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+            let activeBtn = document.getElementById('btn-' + mode);
+            if(activeBtn) activeBtn.classList.add('active');
+            
+            document.getElementById("moodMenu").classList.remove("show");
+            document.body.className = `theme-${mode}`;
+            if (document.body.classList.contains('logged-in')) document.body.classList.add('logged-in');
+
+            const data = themesData[mode];
+            document.getElementById("brandTitle").innerText = data.title;
+            document.getElementById("brandSub").innerText = data.subtitle;
+            document.getElementById("bgImageElement").src = convertDriveLink(data.rawUrl || data.url);
+        }
+
+        async function fetchAllThemes() {
+            try {
+                for (let m of ['rain', 'midnight', 'warm']) {
+                    let snap = await getDoc(doc(db, "settings", "theme_" + m));
+                    if(snap.exists()) {
+                        let d = snap.data();
+                        if(d.url) themesData[m].url = d.url;
+                        if(d.rawUrl) themesData[m].rawUrl = d.rawUrl;
+                    }
+                }
+            } catch(e) {}
+            setMode(currentMode);
+        }
+
         window.handleTitleClick = function() {
             if (sessionStorage.getItem('ahtao_admin_auth') === 'true') {
                 document.getElementById("adminModal").style.display = "flex";
+                loadAdminThemeFields();
             } else {
                 let pass = prompt("🔐 กรุณากรอกรหัสผ่านเพื่อเข้าสู่หลังบ้าน:");
                 if (pass === ADMIN_PASS) {
                     sessionStorage.setItem('ahtao_admin_auth', 'true');
                     document.body.classList.add('logged-in');
                     document.getElementById("adminModal").style.display = "flex";
+                    loadAdminThemeFields();
                 } else if (pass !== null) {
                     alert("❌ รหัสผ่านไม่ถูกต้อง");
                 }
@@ -337,35 +433,29 @@
 
         window.closeAdmin = function() { document.getElementById("adminModal").style.display = "none"; }
 
-        window.addTag = function(tag) {
-            const input = document.getElementById("postTags");
-            input.value = input.value ? input.value + ", " + tag : tag;
-        }
-
-        // โหลดแบนเนอร์
-        async function fetchBanner() {
-            try {
-                const snap = await getDoc(doc(db, "settings", "banner"));
-                if(snap.exists()) {
-                    let d = snap.data();
-                    if(d.url) {
-                        document.querySelector(".bg-image").src = convertDriveLink(d.url);
-                        document.getElementById("bannerUrlInput").value = d.rawUrl || d.url;
-                    }
-                }
-            } catch(e) {}
+        window.loadAdminThemeFields = function() {
+            const selected = document.getElementById("adminThemeSelect").value;
+            const data = themesData[selected];
+            document.getElementById("bannerUrlInput").value = data.rawUrl || data.url || '';
         }
 
         window.saveBannerData = async function() {
+            const theme = document.getElementById("adminThemeSelect").value;
             let rawUrl = document.getElementById("bannerUrlInput").value.trim();
             let url = convertDriveLink(rawUrl);
             try {
-                await setDoc(doc(db, "settings", "banner"), { url, rawUrl });
+                await setDoc(doc(db, "settings", "theme_" + theme), { url, rawUrl, title: themesData[theme].title, subtitle: themesData[theme].subtitle });
                 alert("อัปเดตภาพแบนเนอร์สำเร็จ!");
                 location.reload();
             } catch(e) { alert("เกิดข้อผิดพลาด: " + e.message); }
         }
 
+        window.addTag = function(tag) {
+            const input = document.getElementById("postTags");
+            input.value = input.value ? input.value + ", " + tag : tag;
+        }
+
+        let allPostsGlobal = [];
         async function loadPosts() {
             const container = document.getElementById("postsContainer");
             try {
@@ -375,58 +465,65 @@
                     return;
                 }
                 
-                let postsArray = [];
-                querySnapshot.forEach((docSnap) => { postsArray.push({ id: docSnap.id, ...docSnap.data() }); });
-                postsArray.reverse();
+                allPostsGlobal = [];
+                querySnapshot.forEach((docSnap) => { allPostsGlobal.push({ id: docSnap.id, ...docSnap.data() }); });
+                // เรียงลำดับตามวันที่สร้างจริง (Timeline)
+                allPostsGlobal.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
-                // รายการวันที่สุ่มสำหรับโพสต์เก่าๆ (18/09 - 21/09)
-                const randomDates = [
-                    "18 กันยายน 2026",
-                    "19 กันยายน 2026",
-                    "20 กันยายน 2026",
-                    "21 กันยายน 2026"
-                ];
-
-                container.innerHTML = "";
-                postsArray.forEach((post, index) => {
-                    let textHtml = "";
-                    if (post.type === 'poem') {
-                        textHtml = `<div class="poem">${post.content ? post.content.replace(/\n/g, '<br>') : ''}</div>`;
-                    } else {
-                        textHtml = `<p>${post.content ? post.content.replace(/\n/g, '<br>') : ''}</p>`;
-                    }
-
-                    let imgHtml = post.imageUrl ? `<img src="${convertDriveLink(post.imageUrl)}" class="post-image" alt="Memory" loading="lazy">` : '';
-                    let tagsHtml = "";
-                    if (post.tags) {
-                        const tagsList = post.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-                        tagsHtml = `<div class="post-tags">${tagsList.map(tag => `<span class="post-tag">${tag}</span>`).join('')}</div>`;
-                    }
-
-                    let contentWrapper = post.isBlurred 
-                        ? `<div class="blur-content"><div class="blur-hint">แตะเพื่อดูความรู้สึก</div>${imgHtml}${textHtml}</div>` 
-                        : `${imgHtml}${textHtml}`;
-
-                    let hugsCount = post.hugs || 0;
-                    // ถ้าโพสต์ไม่มีวันที่ ให้สุ่มใส่วันที่ช่วง 18/09 - 21/09
-                    let displayDate = post.date || randomDates[index % randomDates.length];
-
-                    container.innerHTML += `
-                        <article class="entry-card">
-                            <span class="date">${displayDate}</span>
-                            ${contentWrapper}
-                            <div class="post-footer">
-                                ${tagsHtml}
-                                <div class="post-actions">
-                                    <button class="action-btn" onclick="sendHug('${post.id}')" title="ส่งกอด">🤍 <span id="hug-count-${post.id}">${hugsCount}</span></button>
-                                    <button class="action-btn" onclick="shareAsCard(this)" title="แชร์เป็นการ์ดรูปภาพ">📤 แชร์</button>
-                                    <button class="delete-btn" onclick="deletePost('${post.id}')" title="ลบโพสต์">✕ ลบ</button>
-                                </div>
-                            </div>
-                        </article>
-                    `;
-                });
+                renderPostsList(allPostsGlobal);
             } catch (e) { container.innerHTML = `<p style="text-align: center; color: #ff6b6b;">ไม่สามารถโหลดข้อมูลได้...</p>`; }
+        }
+
+        function renderPostsList(postsArray) {
+            const container = document.getElementById("postsContainer");
+            container.innerHTML = "";
+            postsArray.forEach((post) => {
+                let textHtml = post.type === 'poem' 
+                    ? `<div class="poem">${post.content ? post.content.replace(/\n/g, '<br>') : ''}</div>` 
+                    : `<p>${post.content ? post.content.replace(/\n/g, '<br>') : ''}</p>`;
+
+                let imgHtml = post.imageUrl ? `<img src="${convertDriveLink(post.imageUrl)}" class="post-image" alt="Memory" loading="lazy">` : '';
+                let tagsHtml = "";
+                if (post.tags) {
+                    const tagsList = post.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+                    tagsHtml = `<div class="post-tags">${tagsList.map(tag => `<span class="post-tag">${tag}</span>`).join('')}</div>`;
+                }
+
+                let contentWrapper = post.isBlurred 
+                    ? `<div class="blur-content"><div class="blur-hint">แตะเพื่อดูความรู้สึก</div>${imgHtml}${textHtml}</div>` 
+                    : `${imgHtml}${textHtml}`;
+
+                let hugsCount = post.hugs || 0;
+
+                container.innerHTML += `
+                    <article class="entry-card" id="post-${post.id}">
+                        ${post.date ? `<span class="date">${post.date}</span>` : ''}
+                        ${contentWrapper}
+                        <div class="post-footer">
+                            ${tagsHtml}
+                            <div class="post-actions">
+                                <button class="action-btn" onclick="sendHug('${post.id}')" title="ส่งกอด">🤍 <span id="hug-count-${post.id}">${hugsCount}</span></button>
+                                <button class="action-btn" onclick="shareAsCard(this)" title="คลิกเพื่อสร้างการ์ดรูปภาพพร้อมเครดิตสำหรับแชร์">📤 แชร์การ์ด</button>
+                                <button class="action-btn" onclick="copyPostLink('${post.id}')" title="คัดลอกลิงก์โพสต์นี้">🔗 ลิงก์</button>
+                                <button class="delete-btn" onclick="deletePost('${post.id}')" title="ลบโพสต์">✕ ลบ</button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            });
+        }
+
+        // ปุ่มสุ่มความทรงจำ (🌠)
+        window.randomMemory = function() {
+            if (allPostsGlobal.length === 0) return;
+            const randomPost = allPostsGlobal[Math.floor(Math.random() * allPostsGlobal.length)];
+            const el = document.getElementById(`post-${randomPost.id}`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.style.transition = "background 0.5s";
+                el.style.background = "rgba(255,255,255,0.05)";
+                setTimeout(() => { el.style.background = "transparent"; }, 1500);
+            }
         }
 
         window.sendHug = async function(id) {
@@ -438,34 +535,37 @@
             } catch(e) {}
         }
 
-        // ระบบแชร์: สร้างเป็นการ์ดรูปภาพพร้อมฝังเครดิตและลิงก์เว็บถาวร (ลบไม่ออก)
+        // คัดลอกลิงก์โพสต์
+        window.copyPostLink = function(id) {
+            const link = SITE_URL + "#post-" + id;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("📋 คัดลอกลิงก์โพสต์เรียบร้อย ส่งให้เพื่อนได้เลย!");
+            });
+        }
+
+        // ระบบแชร์เป็นการ์ดรูปภาพอัตโนมัติ
         window.shareAsCard = function(btn) {
             const card = btn.closest('.entry-card');
             const textEl = card.querySelector('p, .poem');
             const poemText = textEl ? textEl.innerText : "";
 
-            // สร้าง Canvas วาดภาพการ์ดบทกวี
             const canvas = document.createElement('canvas');
             canvas.width = 1080;
-            canvas.height = 1080; // สัดส่วนสี่เหลี่ยมจัตุรัส เหมาะกับ IG Story / Facebook
+            canvas.height = 1080;
             const ctx = canvas.getContext('2d');
 
-            // พื้นหลังดาร์กมินิมอล
             ctx.fillStyle = "#0c0c0c";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // ขอบกรอบการ์ดบางๆ
             ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
             ctx.lineWidth = 4;
             ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
-            // วาดข้อความบทกวีตรงกลาง
             ctx.fillStyle = "#e1e1e1";
             ctx.font = "italic 42px 'Sarabun', sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
-            // ฟังก์ชันตัดคำขึ้นบรรทัดใหม่ใน Canvas
             function wrapText(context, text, x, y, maxWidth, lineHeight) {
                 let paragraphs = text.split('\n');
                 let lines = [];
@@ -475,8 +575,7 @@
                     for (let n = 0; n < words.length; n++) {
                         let testLine = line + words[n] + ' ';
                         let metrics = context.measureText(testLine);
-                        let testWidth = metrics.width;
-                        if (testWidth > maxWidth && n > 0) {
+                        if (metrics.width > maxWidth && n > 0) {
                             lines.push(line);
                             line = words[n] + ' ';
                         } else {
@@ -493,7 +592,6 @@
 
             wrapText(ctx, poemText, canvas.width / 2, canvas.height / 2 - 40, 850, 75);
 
-            // วาดเครดิตและลิงก์เว็บด้านล่างสุด (ฝังติดไปกับภาพ ลบออกไม่ได้)
             ctx.fillStyle = "#888888";
             ctx.font = "300 24px 'Sarabun', sans-serif";
             ctx.fillText("✦ AHTAO SPACE", canvas.width / 2, canvas.height - 140);
@@ -502,27 +600,21 @@
             ctx.font = "20px 'Cinzel', serif";
             ctx.fillText(SITE_URL, canvas.width / 2, canvas.height - 100);
 
-            // แปลง Canvas เป็นไฟล์รูปภาพแล้วดาวน์โหลด/แชร์อัตโนมัติ
             canvas.toBlob(async (blob) => {
                 const file = new File([blob], "Ahtao-Space-Poem.png", { type: "image/png" });
                 
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
-                        await navigator.share({
-                            files: [file],
-                            title: 'AHTAO SPACE',
-                            text: 'ความรู้สึกจาก AHTAO SPACE'
-                        });
+                        await navigator.share({ files: [file], title: 'AHTAO SPACE', text: 'ความรู้สึกจาก AHTAO SPACE' });
                         return;
-                    } catch (err) { console.log("Share cancelled"); }
+                    } catch (err) {}
                 }
 
-                // ถ้ามือถือ/เบราว์เซอร์ไม่รองรับการแชร์ไฟล์โดยตรง จะทำการดาวน์โหลดภาพลงเครื่องทันที
                 const link = document.createElement('a');
                 link.download = 'ahtao-space-card.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                alert("📥 สร้างการ์ดรูปภาพบทกวีพร้อมเครดิตเว็บเรียบร้อยแล้ว!\nสามารถนำรูปไปโพสต์ลง IG Story ได้เลยค่ะ");
+                alert("📥 สร้างการ์ดรูปภาพบทกวีพร้อมเครดิตเว็บเรียบร้อย!\nนำรูปไปโพสต์ลง IG Story ได้เลยค่ะ");
             }, 'image/png');
         }
 
@@ -538,7 +630,6 @@
                 return;
             }
 
-            // วันที่ปัจจุบัน
             const today = new Date();
             const date = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -553,8 +644,15 @@
             } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
         }
 
+        window.deletePost = async function(id) {
+            if (confirm("ลบความรู้สึกนี้ทิ้งใช่หรือไม่?")) {
+                try { await deleteDoc(doc(db, "posts", id)); location.reload(); }
+                catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+            }
+        }
+
         initParticles();
-        fetchBanner();
+        fetchAllThemes();
         loadPosts();
     </script>
 </body>
